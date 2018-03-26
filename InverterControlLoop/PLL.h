@@ -46,8 +46,8 @@ void PLLTask(void);
 uint32_t PLLTaskInit(uint16_t Grid_freq, long DELTA_T,volatile LPF_COEFF lpf_coeff, SPLL_1ph_SOGI *spll_obj);
 void PLLRun(SPLL_1ph_SOGI *spll_obj); //pass in a pointer 
 void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll);
-void Timer0BIntHandler(void); //PLL ISR
-void configureTimer0B(void); //ISR Init
+void Timer2AIntHandler(void); //PLL ISR
+void configureTimer2A(void); //ISR Init
 #endif 
 
 //*********** Macro Definition ***********//

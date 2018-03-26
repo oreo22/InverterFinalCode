@@ -37,7 +37,7 @@
 
 
 #define PLLSTACKSIZE        128         // Stack size in words
-#define TIMER0B_PRIORITY		2
+#define TIMER2A_PRIORITY		2
 
 //*****************************************************************************
 //
@@ -91,7 +91,7 @@ uint32_t PLLTaskInit(uint16_t Grid_freq, long DELTA_T,volatile LPF_COEFF lpf_coe
 	spll_obj->lpf_coeff.B0_lf=B0_LPF;
 	spll_obj->lpf_coeff.A1_lf=A1_LPF;
 	spll_obj->delta_T=DELTA_T;
-//	configureTimer0B();
+//	configureTimer2A();
 //	spll_obj->osg_u[0]=spll_obj->osg_coeff.osg_b0*(spll_obj->u[0]- spll_obj->u[2])+spll_obj->osg_coeff.osg_a1*spll_obj->osg_u[1]+spll_obj->osg_coeff.osg_a2*spll_obj->osg_u[2];
 	
 }
@@ -99,17 +99,17 @@ uint32_t PLLTaskInit(uint16_t Grid_freq, long DELTA_T,volatile LPF_COEFF lpf_coe
 
 
 
-void configureTimer0B(void){
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0); // Enable Timer 1 Clock
-	TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
-  TimerLoadSet(TIMER0_BASE, TIMER_B, SysCtlClockGet()/SAMPLING_FREQ); //SysCtlClockGet()/SWITCHING_FREQ is set to 80MHz according to main file, Reload Value = fclk/fswitch
+void configureTimer2A(void){
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2); // Enable Timer 1 Clock
+	TimerConfigure(TIMER2_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
+  TimerLoadSet(TIMER2_BASE, TIMER_A, SysCtlClockGet()/SAMPLING_FREQ); //SysCtlClockGet()/SWITCHING_FREQ is set to 80MHz according to main file, Reload Value = fclk/fswitch
 
 //Configuring the interrupts	
-	TimerIntRegister(TIMER1_BASE, TIMER_B, &Timer0BIntHandler);
-	IntPrioritySet(INT_TIMER0B, TIMER0B_PRIORITY);
-	TimerEnable(TIMER0_BASE, TIMER_B);	// Start Timer 0B
-	TimerIntEnable(TIMER0_BASE, TIMER_TIMB_TIMEOUT);
-	IntEnable(INT_TIMER0A); //Have to have it enabled in order
+	TimerIntRegister(TIMER2_BASE, TIMER_A, &Timer2AIntHandler);
+	IntPrioritySet(INT_TIMER2A, TIMER2A_PRIORITY);
+	TimerEnable(TIMER2_BASE, TIMER_A);	// Start Timer 0B
+	TimerIntEnable(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
+	IntEnable(INT_TIMER2A); //Have to have it enabled in order
 }
 
 
@@ -182,8 +182,8 @@ void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
 	spll->osg_coeff.osg_qb2=spll->osg_coeff.osg_qb0;
 }
 
-void Timer0BIntHandler(void){
-		TimerIntClear(TIMER0_BASE, TIMER_TIMB_TIMEOUT);
+void Timer2AIntHandler(void){
+		TimerIntClear(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
 		/*inv_meas_vol_inst =correctedInput; //((long)((long)VAC_FB<<12))-offset_165)<<1;
 		spll1.u[0]=(long)InvSine>>1; // Q24 to Q23
 		SPLL_1ph_SOGI_run_FUNC(&spll1);

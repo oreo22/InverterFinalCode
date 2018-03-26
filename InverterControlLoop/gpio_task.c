@@ -55,9 +55,9 @@ void GPIOTask(void) //void *pvParameters)
 //		xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
 	//	IntEnable(INT_TIMER1A);
 	//	xSemaphoreGive(g_pUARTSemaphore);
-		//IntEnable(INT_TIMER1A);
+		IntEnable(INT_TIMER1A);
 		//TimerIntDisable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-	// sFactor=(dcValue*voltageDivider);//dcDesired;
+	 sFactor=(dcValue*voltageDivider);//dcDesired;
 		//GPIO_PB2_SET_HIGH();
 		if(counter == 10000){
 			 GPIO_PB2_SET_LOW();
@@ -107,7 +107,7 @@ uint32_t clockTime=0;
 void configureTimer1A(void){
   SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1); // Enable Timer 1 Clock
 	TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
-  TimerLoadSet(TIMER1_BASE, TIMER_A, 320); //SysCtlClockGet()/SWITCHING_FREQ is set to 80MHz according to main file, Reload Value = fclk/fswitch
+  TimerLoadSet(TIMER1_BASE, TIMER_A, SysCtlClockGet()/SWITCHING_FREQ); // is set to 80MHz according to main file, Reload Value = fclk/fswitch
 	//Configuring the interrupts	
 	TimerIntRegister(TIMER1_BASE, TIMER_A, &Timer1AIntHandler);
 	IntPrioritySet(INT_TIMER1A, TIMER1A_PRIORITY);
@@ -130,7 +130,8 @@ void Timer1AIntHandler(void){
   TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);                // clear the timer interrupt
 	int inputValue= adcRawInput[adc_input_index].PE0;
 	int inputNeg= (-1* inputValue)+ 3300;
-	uint32_t temp=sawtooth[saw_index-1];//*sFactor; //*sFactor;
+	uint32_t temp=sawtooth[saw_index-1]*sFactor; //*sFactor;
+	temp=temp/dcDesired;
 		if(inputValue >= 1600) {
 				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
 		}
