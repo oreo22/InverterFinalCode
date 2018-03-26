@@ -175,6 +175,7 @@ void setAdcData (AdcData_t *data) {
 	data->PE3 = 4095;
 }
 int correctedInput=0;
+extern SPLL_1ph_SOGI PLLSync;
 void ADC0Seq2_Handler(void)
 {
 	//GPIO_PB2_SET_HIGH();
@@ -194,13 +195,13 @@ void ADC0Seq2_Handler(void)
 		}
 
 		//Calling the PLL
-	/*IntTrigger(
-		PLLTaskInit(GRID_FREQ,_IQ23((float)(1.0/ISR_FREQUENCY)),&spll2,spll_lpf_coef2);
-PLLCoeffUpdate(((float)(1.0/ISR_FREQUENCY)),(float)(2*PI*GRID_FREQ),&spll2);
-		inv_meas_vol_inst =((long)((long)VAC_FB<<12))-offset_165)<<1;
-		spll1.AC_input=(long)InvSine>>1; // Q24 to Q23
-		SPLL_1ph_SOGI_run_FUNC(&spll1);
-		InvSine=spll2.sin<<1; // shift from Q23 to Q24 */
+
+		
+	//	PLLTaskInit(GRID_FREQ,_IQ23((float)(1.0/ISR_FREQUENCY)),&spll2,spll_lpf_coef2);
+	//PLLCoeffUpdate(((float)(1.0/ISR_FREQUENCY)),(float)(2*PI*GRID_FREQ),&spll2);
+		PLLSync.u[0] =correctedInput<<1;
+		IntTrigger(INT_TIMER2A);
+		//uint32_t InvSine=spll2.sin<<1; // shift from Q23 to Q24 
 	/*	
 			xSemaphoreGiveFromISR(arrayFull, &xHigherPriorityTaskWoken);
 			sqrt(rms/ARRAY_SIZE) //alt way to calculate when the array is full

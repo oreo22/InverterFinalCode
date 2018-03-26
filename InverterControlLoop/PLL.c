@@ -91,7 +91,7 @@ uint32_t PLLTaskInit(uint16_t Grid_freq, long DELTA_T,volatile LPF_COEFF lpf_coe
 	spll_obj->lpf_coeff.B0_lf=B0_LPF;
 	spll_obj->lpf_coeff.A1_lf=A1_LPF;
 	spll_obj->delta_T=DELTA_T;
-//	configureTimer2A();
+	configureTimer2A();
 //	spll_obj->osg_u[0]=spll_obj->osg_coeff.osg_b0*(spll_obj->u[0]- spll_obj->u[2])+spll_obj->osg_coeff.osg_a1*spll_obj->osg_u[1]+spll_obj->osg_coeff.osg_a2*spll_obj->osg_u[2];
 	
 }
@@ -184,10 +184,7 @@ void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
 
 void Timer2AIntHandler(void){
 		TimerIntClear(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
-		/*inv_meas_vol_inst =correctedInput; //((long)((long)VAC_FB<<12))-offset_165)<<1;
-		spll1.u[0]=(long)InvSine>>1; // Q24 to Q23
-		SPLL_1ph_SOGI_run_FUNC(&spll1);
-		InvSine=spll2.sin<<1; // shift from Q23 to Q24 */
 		PLLRun(&PLLSync);
+	
 	
 }
