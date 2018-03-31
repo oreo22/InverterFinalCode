@@ -26,7 +26,7 @@
 //
 //*****************************************************************************
 #define ADC_SEQUENCE2           2
-#define ADC_SEQUENCE2_PRIORITY  1
+#define ADC_SEQUENCE2_PRIORITY  2
 
 //*****************************************************************************
 //
@@ -89,6 +89,7 @@ int sqrt(int input) {
   }
   return guess; 
 } 
+
 static double one_step_newton_raphson_sqrt(double val, double hint)
 {
 	double probe;
@@ -107,8 +108,8 @@ void ADCTask(void)//void *pvParameters
       sum_squares = sqrt(sum_squares);
       rms = ((sum_squares) * 3300) / 4095;
 			rmsFlag=0;
-			UARTprintf("RMS on PE0 %d \n",rms);
-			UARTprintf("DC Voltage on PE1 %d \n",dcValue);
+		//	UARTprintf("RMS on PE0 %d \n",rms);
+			UARTprintf("DC Voltage on PE1 %u \n",7000/(dcValue*3));
 		}
 		//UARTprintf("Current InputValue %d \n", inputValue);
 		// https://stackoverflow.com/questions/28807537/any-faster-rms-value-calculation-in-c#28808472 
@@ -175,18 +176,19 @@ void setAdcData (AdcData_t *data) {
 	data->PE3 = 4095;
 }
 int correctedInput=0;
+float testing=0;
 extern SPLL_1ph_SOGI PLLSync;
 void ADC0Seq2_Handler(void)
 {
 	//GPIO_PB2_SET_HIGH();
     ADCIntClear(ADC0_BASE, ADC_SEQUENCE2); // Clear the timer interrupt flag.
-		status ^=GPIO_PIN_3;
-		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
+		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
 	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE0);
 		ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE1); //dc value
-		inputValue= (adcRawInput[adc_input_index].PE0* 3300)/4095;
+		//inputValue= (adcRawInput[adc_input_index].PE0* 3300)/4095;
 
 		dcValue=(adcRawInput[adc_input_index].PE1* 3300)/4095;
+		dcValue=dcValue*3;
 			correctedInput=adcRawInput[adc_input_index].PE0-scbLevelShift; //take out that level shift 
 		sum_squares+=correctedInput*correctedInput;
 			adc_input_index = (adc_input_index + 1) % (ARRAY_SIZE);
@@ -198,14 +200,16 @@ void ADC0Seq2_Handler(void)
 
 		
 	//	PLLTaskInit(GRID_FREQ,_IQ23((float)(1.0/ISR_FREQUENCY)),&spll2,spll_lpf_coef2);
-	//PLLCoeffUpdate(((float)(1.0/ISR_FREQUENCY)),(float)(2*PI*GRID_FREQ),&spll2);
-		PLLSync.u[0] =correctedInput<<1;
-		IntTrigger(INT_TIMER2A);
+		PLLSync.u[0] =((float) correctedInput)/3300;
+		IntEnable(INT_TIMER2A);
+		IntPendSet(INT_TIMER2A);
+		
 		//uint32_t InvSine=spll2.sin<<1; // shift from Q23 to Q24 
 	/*	
 			xSemaphoreGiveFromISR(arrayFull, &xHigherPriorityTaskWoken);
 			sqrt(rms/ARRAY_SIZE) //alt way to calculate when the array is full
 		}*/
+		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0x00);
 
 }
 

@@ -47,6 +47,8 @@ extern "C"
 #ifndef MATH_TYPE
 #define MATH_TYPE               IQ_MATH
 #endif
+	
+#define helloWorld						42
 
 //*****************************************************************************
 //

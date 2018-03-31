@@ -31,8 +31,8 @@
 //
 //*****************************************************************************
 #define GPIOSTASKSTACKSIZE        128         // Stack size in words
-#define SWITCHING_FREQ  250000//250000 //10000*25 samples
-#define TIMER1A_PRIORITY 3
+#define SWITCHING_FREQ  500000//300000//250000 //10000*25 samples
+#define TIMER1A_PRIORITY 1
 #define dcDesired 7000
 #define voltageDivider 3
 
@@ -41,6 +41,7 @@ extern uint16_t adc_input_index;
 int inputValue=0;
 uint16_t dcValue=0;
 double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
+double ma=0;
 //*****************************************************************************
 //
 // This task toggles the user selected LED at a user selected frequency. User
@@ -55,13 +56,14 @@ void GPIOTask(void) //void *pvParameters)
 //		xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
 	//	IntEnable(INT_TIMER1A);
 	//	xSemaphoreGive(g_pUARTSemaphore);
-		IntEnable(INT_TIMER1A);
 		//TimerIntDisable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 	 sFactor=(dcValue*voltageDivider);//dcDesired;
-		//GPIO_PB2_SET_HIGH();
+		//ma=sFactor/dcDesired;
+	
+		GPIO_PB2_SET_HIGH();
 		if(counter == 10000){
 			 GPIO_PB2_SET_LOW();
-		//	UARTprintf("ma= %i \n",sFactor);
+		//	UARTprintf("ma= %i \n",ma);
 			counter=0;
 		}
 		
@@ -86,7 +88,7 @@ uint32_t GPIOTaskInit(void)
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD); 
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB); 
-	GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_3 | GPIO_PIN_2 | GPIO_PIN_1 | GPIO_PIN_0 );
+	GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE,  GPIO_PIN_6 | GPIO_PIN_3 | GPIO_PIN_2 | GPIO_PIN_1 | GPIO_PIN_0 );
 	GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE,GPIO_PIN_2 | GPIO_PIN_3 );
 	GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_2 | GPIO_PIN_3 );
 	configureTimer1A();
@@ -110,7 +112,7 @@ void configureTimer1A(void){
   TimerLoadSet(TIMER1_BASE, TIMER_A, SysCtlClockGet()/SWITCHING_FREQ); // is set to 80MHz according to main file, Reload Value = fclk/fswitch
 	//Configuring the interrupts	
 	TimerIntRegister(TIMER1_BASE, TIMER_A, &Timer1AIntHandler);
-	IntPrioritySet(INT_TIMER1A, TIMER1A_PRIORITY);
+	IntPrioritySet(INT_TIMER1A, 0);
 	TimerEnable(TIMER1_BASE, TIMER_A);	// Start Timer 1A
 	TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 	IntDisable(INT_TIMER1A);
@@ -126,32 +128,29 @@ uint32_t sawtooth[25] = {1650, 1860, 2060,2270,2480,2680,2890,3090, 3300,3090,28
 uint32_t saw_index=0;
 // PD2 is the A branch, PD3 is the B branch 
 //sFactor=1
+	uint32_t cSawtoothValue=0;
 void Timer1AIntHandler(void){
   TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);                // clear the timer interrupt
-	int inputValue= adcRawInput[adc_input_index].PE0;
+	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
+	//int inputValue= adcRawInput[adc_input_index].PE0;
 	int inputNeg= (-1* inputValue)+ 3300;
-	uint32_t temp=sawtooth[saw_index-1]*sFactor; //*sFactor;
-	temp=temp/dcDesired;
-		if(inputValue >= 1600) {
-				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
-		}
-		else{
-			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0);
-		}
-		if(inputValue >= temp) {
+	cSawtoothValue=sawtooth[saw_index-1]*dcValue; 
+	cSawtoothValue=cSawtoothValue/dcDesired;
+		if(inputValue >= cSawtoothValue) {
 				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, GPIO_PIN_0);
 		}
-		if(inputValue < temp  ){ 
+		if(inputValue < cSawtoothValue  ){ 
 			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, 0x00);
 		}
-		if (inputNeg > temp){
+		if (inputNeg > cSawtoothValue){
 //			GPIO_PORTD_DATA_R =0x010;  //PD2 off, PD3 on
 			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, GPIO_PIN_1);
 		}
-		if(inputNeg < temp){ 
+		if(inputNeg < cSawtoothValue){ 
 			//GPIO_PORTD_DATA_R =0x020;  //PD2 on, PD3 off 
 			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, 0x00);
 		}
 	saw_index= (saw_index %25 )+1;
+			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
 }
 

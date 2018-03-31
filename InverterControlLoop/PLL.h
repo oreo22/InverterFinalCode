@@ -3,49 +3,45 @@
 #ifndef SPLL_1ph_SOGI_H_
 #define SPLL_1ph_SOGI_H_
 
-#define SPLL_SOGI_Q _IQ23
-#define SPLL_SOGI_Qmpy _IQ23mpy(A, B) 
-#define SPLL_SOGI_SINE _IQ23sin
-#define SPLL_SOGI_COS _IQ23cos
 //*********** Structure Definition ********//
 typedef struct{
-	uint32_t osg_k;
-	uint32_t osg_x;
-	uint32_t osg_y;
-	uint32_t osg_b0;
-	uint32_t osg_b2;
-	uint32_t osg_a1;
-	uint32_t osg_a2;
-	uint32_t osg_qb0;
-	uint32_t osg_qb1;
-	uint32_t osg_qb2;
+	float osg_k;
+	float osg_x;
+	float osg_y;
+	float osg_b0;
+	float osg_b2;
+	float osg_a1;
+	float osg_a2;
+	float osg_qb0;
+	float osg_qb1;
+	float osg_qb2;
 }OSG_COEFF;
 typedef struct{
-	uint32_t B1_lf;
-	uint32_t B0_lf;
-	uint32_t A1_lf;
+	float B1_lf;
+	float B0_lf;
+	float A1_lf;
 }LPF_COEFF;
 typedef struct{
-	uint32_t u[3]; // Ac Input
-	uint32_t osg_u[3];
-	uint32_t osg_qu[3];
-	uint32_t u_Q[2];
-	uint32_t u_D[2];
-	uint32_t ylf[2];
-	uint32_t fo; // output frequency of PLL
-	uint32_t fn; //nominal frequency
-	uint32_t theta[2];
-	uint32_t cos;
-	uint32_t sin;
-	uint32_t delta_T;
+	float u[3]; // Ac Input
+	float osg_u[3];
+	float osg_qu[3];
+	float u_Q[2];
+	float u_D[2];
+	float ylf[2];
+	float fo; // output frequency of PLL
+	float fn; //nominal frequency
+	float theta[2];
+	float cos;
+	float sin;
+	float delta_T;
 	OSG_COEFF osg_coeff;
 	LPF_COEFF lpf_coeff;
 }SPLL_1ph_SOGI;
 //*********** Function Declarations *******//
 void PLLTask(void);
-uint32_t PLLTaskInit(uint16_t Grid_freq, long DELTA_T,volatile LPF_COEFF lpf_coeff, SPLL_1ph_SOGI *spll_obj);
-void PLLRun(SPLL_1ph_SOGI *spll_obj); //pass in a pointer 
-void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll);
+void PLLTaskInit(uint16_t Grid_freq, double DELTA_T,volatile LPF_COEFF lpf_coeff, SPLL_1ph_SOGI *spll_obj);
+static inline void PLLRun(SPLL_1ph_SOGI *spll_obj); //pass in a pofloater 
+void PLLCoeffUpdate(double delta_T, float wn, volatile SPLL_1ph_SOGI *spll);
 void Timer2AIntHandler(void); //PLL ISR
 void configureTimer2A(void); //ISR Init
 #endif 
