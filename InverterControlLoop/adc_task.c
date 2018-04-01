@@ -200,7 +200,7 @@ void ADC0Seq2_Handler(void)
 
 		
 	//	PLLTaskInit(GRID_FREQ,_IQ23((float)(1.0/ISR_FREQUENCY)),&spll2,spll_lpf_coef2);
-		PLLSync.u[0] =((float) correctedInput)/3300;
+		PLLSync.u[0] =((float) correctedInput)/1650;
 		IntEnable(INT_TIMER2A);
 		IntPendSet(INT_TIMER2A);
 		

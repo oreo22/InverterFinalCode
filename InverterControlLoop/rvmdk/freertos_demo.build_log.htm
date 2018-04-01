@@ -8,78 +8,96 @@ Project File Date:  03/31/2018
 
 <h2>Output:</h2>
 Build target 'freertos_demo'
-compiling main.c...
-main.c(173): warning:  #1-D: last line of file ends without a newline
-  }
-main.c: 1 warning, 0 errors
-compiling adc_task.c...
-adc_task.c(164): warning:  #940-D: missing return statement at end of non-void function "ADCTaskInit"
-  }
-adc_task.c(93): warning:  #177-D: function "one_step_newton_raphson_sqrt" was declared but never referenced
-  static double one_step_newton_raphson_sqrt(double val, double hint)
-adc_task.c: 2 warnings, 0 errors
 compiling PLL.c...
-PLL.c(188): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+PLL.c(187): warning:  #1035-D: single-precision operand implicitly converted to double-precision
         temp=(float)1.0/(osgx+osgy+4.0);
-PLL.c(191): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+PLL.c(190): warning:  #1035-D: single-precision operand implicitly converted to double-precision
         spll->osg_coeff.osg_a1=((float)(2.0*(4.0-osgy))*temp);
-PLL.c(193): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+PLL.c(192): warning:  #1035-D: single-precision operand implicitly converted to double-precision
         spll->osg_coeff.osg_qb0=((float)(0.5*osgy)*temp);
-PLL.c(194): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+PLL.c(193): warning:  #1035-D: single-precision operand implicitly converted to double-precision
         spll->osg_coeff.osg_qb1=(spll->osg_coeff.osg_qb0*(2.0));
-PLL.c(204): warning:  #1-D: last line of file ends without a newline
+PLL.c(203): warning:  #1-D: last line of file ends without a newline
   }
 PLL.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=10976 RO-data=1396 RW-data=1644 ZI-data=8412  
+Program Size: Code=9636 RO-data=1136 RW-data=1644 ZI-data=8412  
 After Build - User command #1: fromelf --bin --output .\rvmdk\freertos_demo.bin .\rvmdk\freertos_demo.axf
-".\rvmdk\freertos_demo.axf" - 0 Error(s), 8 Warning(s).
+".\rvmdk\freertos_demo.axf" - 0 Error(s), 5 Warning(s).
 Load "C:\\Users\\AcerPC\\Desktop\\GradSchool\\TM4C1234g\\ORI-COPY\\ControllableInverter_NoFREETOS\\InverterControlLoop\\rvmdk\\freertos_demo.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
-</pre>
-</body>
-</html>
- - 2 Error(s), 8 Warning(s).
+
+ng(s).
 Target not created
-ignored
-        float delta_T;
-PLL.h(44): error:  #18: expected a ")"
-  void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll);
-PLL.h(44): error:  #169: expected a declaration
-  void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll);
-adc_task.c(164): warning:  #940-D: missing return statement at end of non-void function "ADCTaskInit"
+.c(198): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        spll->osg_coeff.osg_qb1=(spll->osg_coeff.osg_qb0*(2.0));
+PLL.c(208): warning:  #1-D: last line of file ends without a newline
   }
-adc_task.c(93): warning:  #177-D: function "one_step_newton_raphson_sqrt" was declared but never referenced
-  static double one_step_newton_raphson_sqrt(double val, double hint)
-adc_task.c: 3 warnings, 5 errors
-compiling gpio_task.c...
-compiling PLL.c...
-PLL.c(96): error:  #134: expected a field name
-        spll_obj->delta_T=DELTA_T;
-PLL.c(96): error:  #29: expected an expression
-        spll_obj->delta_T=DELTA_T;
-PLL.c(162): error:  #134: expected a field name
-        spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*(2*3.1415926));
-PLL.c(162): error:  #18: expected a ")"
-        spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*(2*3.1415926));
-PLL.c(162): error:  #18: expected a ")"
-        spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*(2*3.1415926));
-PLL.c(162): error:  #29: expected an expression
-        spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*(2*3.1415926));
-PLL.c(179): error:  #18: expected a ")"
-  void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
-PLL.c(179): error:  #147-D: declaration is incompatible with "void PLLCoeffUpdate(float, float, volatile SPLL_1ph_SOGI *)" (declared at line 44 of "PLL.h")
-  void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
-PLL.c(179): error:  #169: expected a declaration
-  void PLLCoeffUpdate(float delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
-PLL.c(202): warning:  #1-D: last line of file ends without a newline
+PLL.c: 5 warnings, 2 errors
+".\rvmdk\freertos_demo.axf" - 3 Error(s), 6 Warning(s).
+Target not created
+(float)(2*3.14159*(float)60),PLLSync);
+PLL.c(205): error:  #167: argument of type "SPLL_1ph_SOGI" is incompatible with parameter of type "SPLL_1ph_SOGI *"
+                PLLRun(PLLSync);
+PLL.c(208): warning:  #1-D: last line of file ends without a newline
   }
-PLL.c(202): warning: At end of source:  #12-D: parsing restarts here after previous syntax error
-PLL.c(120): warning:  #177-D: function "PLLRun" was declared but never referenced
-  static inline void PLLRun(SPLL_1ph_SOGI *spll_obj) {
-PLL.c: 3 warnings, 9 errors
-".\rvmdk\freertos_demo.axf" - 23 Error(s), 8 Warning(s).
+PLL.c: 5 warnings, 4 errors
+".\rvmdk\freertos_demo.axf" - 5 Error(s), 6 Warning(s).
+Target not created
+j.osg_coeff.osg_a2*spll_obj.osg_u[2];
+PLL.c(127): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[0]=spll_obj.osg_coeff.osg_b0*(spll_obj.u[0]- spll_obj.u[2])+spll_obj.osg_coeff.osg_a1*spll_obj.osg_u[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_u[2];
+PLL.c(127): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[0]=spll_obj.osg_coeff.osg_b0*(spll_obj.u[0]- spll_obj.u[2])+spll_obj.osg_coeff.osg_a1*spll_obj.osg_u[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_u[2];
+PLL.c(127): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[0]=spll_obj.osg_coeff.osg_b0*(spll_obj.u[0]- spll_obj.u[2])+spll_obj.osg_coeff.osg_a1*spll_obj.osg_u[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_u[2];
+PLL.c(128): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[2]=spll_obj.osg_u[1];  
+PLL.c(128): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[2]=spll_obj.osg_u[1];  
+PLL.c(129): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[1]=spll_obj.osg_u[0];
+PLL.c(129): error:  #154: expression must have struct or union type
+        spll_obj.osg_u[1]=spll_obj.osg_u[0];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(130): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[0]=spll_obj.osg_coeff.osg_qb0*spll_obj.u[0]+spll_obj.osg_coeff.osg_qb1*spll_obj.u[1]+spll_obj.osg_coeff.osg_qb2*spll_obj.u[2]+spll_obj.osg_coeff.osg_a1*spll_obj.osg_qu[1]+spll_obj.osg_coeff.osg_a2*spll_obj.osg_qu[2];
+PLL.c(131): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[2]=spll_obj.osg_qu[1];
+PLL.c(131): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[2]=spll_obj.osg_qu[1];
+PLL.c(132): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[1]=spll_obj.osg_qu[0];
+PLL.c(132): error:  #154: expression must have struct or union type
+        spll_obj.osg_qu[1]=spll_obj.osg_qu[0];
+PLL.c(133): error:  #154: expression must have struct or union type
+        spll_obj.u[2]=spll_obj.u[1];
+PLL.c(133): error:  #154: expression must have struct or union type
+        spll_obj.u[2]=spll_obj.u[1];
+PLL.c(134): error:  #154: expression must have struct or union type
+        spll_obj.u[1]=spll_obj.u[0];
+PLL.c: 0 warnings, 30 errors
+".\rvmdk\freertos_demo.axf" - 31 Error(s), 3 Warning(s).
 Target not created

@@ -139,14 +139,13 @@ extern int inputValue;
  //pointer to the SPLL_1ph_SOGI object
 volatile LPF_COEFF lpf_coeff;
 extern SPLL_1ph_SOGI PLLSync;
-inline void PLLRun(SPLL_1ph_SOGI *spll_obj);
 int main(void)
 {
 	//use static globsls
 	ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5| SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_25MHZ);  // Set the clocking to run at 80 MHz from the PLL.
 	GPIOTaskInit() ;
 	ADCTaskInit(&Producer);
-	PLLTaskInit((float)60,(double)1/(double)SAMPLING_FREQ, lpf_coeff,&PLLSync); //uint16_t Grid_freq, long DELTA_T, volatile SPLL_1ph_SOGI *spll_obj, volatile LPF_COEFF lpf_coeff
+	PLLTaskInit((float)60,(double)1/(double)SAMPLING_FREQ, lpf_coeff,& PLLSync); //uint16_t Grid_freq, long DELTA_T, volatile SPLL_1ph_SOGI *spll_obj, volatile LPF_COEFF lpf_coeff
 	ConfigureUART();
 	UARTprintf("Start Program \n");
 	IntEnable(INT_ADC0SS2);

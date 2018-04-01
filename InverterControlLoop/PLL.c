@@ -8,8 +8,6 @@
 #include "sysctl.h" //for init ports
 #include "interrupt.h" //for interrupt
 #include "hw_ints.h" //for INT_TIMER2A
-#include <IQmathLib.h>
-#include "IQmathLib.h"
 #include "PLL.h"
 //#include "IQmathCPP.h"
 
@@ -68,32 +66,33 @@ SPLL_1ph_SOGI PLLSync;
 void PLLTaskInit(uint16_t Grid_freq, double DELTA_T,volatile LPF_COEFF lpf_coeff, SPLL_1ph_SOGI *spll_obj)
 {
 	//Memset(&spll_obj, (0.0), sizeof(spll_obj));
-	spll_obj->u[0]=(0.0); // transforms it into fixed point of IQ23, if you wish to extend the decimal allocation, use Q24 or up
-	spll_obj->u[1]=(0.0);
-	spll_obj->u[2]=(0.0);
-	spll_obj->osg_u[0]=(0.0);
-	spll_obj->osg_u[1]=(0.0);
-	spll_obj->osg_u[2]=(0.0);
-	spll_obj->osg_qu[0]=(0.0);
-	spll_obj->osg_qu[1]=(0.0);
-	spll_obj->osg_qu[2]=(0.0);
-	spll_obj->u_Q[0]=(0.0);
-	spll_obj->u_Q[1]=(0.0);
-	spll_obj->u_D[0]=(0.0);
-	spll_obj->u_D[1]=(0.0);
-	spll_obj->ylf[0]=(0.0);
-	spll_obj->ylf[1]=(0.0);
-	spll_obj->fo=(0.0);
-	spll_obj->fn=(Grid_freq);
-	spll_obj->theta[0]=(0.0);
-	spll_obj->theta[1]=(0.0);
-	spll_obj->sin=(0.0);
-	spll_obj->cos=(0.0);
-	//coefficients for the loop filter
+spll_obj->u[0]=(0.0);
+spll_obj->u[1]=(0.0);
+spll_obj->u[2]=(0.0);
+spll_obj->osg_u[0]=(0.0);
+spll_obj->osg_u[1]=(0.0);
+spll_obj->osg_u[2]=(0.0);
+spll_obj->osg_qu[0]=(0.0);
+spll_obj->osg_qu[1]=(0.0);
+spll_obj->osg_qu[2]=(0.0);
+spll_obj->u_Q[0]=(0.0);
+spll_obj->u_Q[1]=(0.0);
+spll_obj->u_D[0]=(0.0);
+spll_obj->u_D[1]=(0.0);
+spll_obj->ylf[0]=(0.0);
+spll_obj->ylf[1]=(0.0);
+spll_obj->fo=(0.0);
+spll_obj->fn=(Grid_freq);
+spll_obj->theta[0]=(0.0);
+spll_obj->theta[1]=(0.0);
+spll_obj->sin=(0.0);
+spll_obj->cos=(0.0);
+	/*//coefficients for the loop filter
 	spll_obj->lpf_coeff.B1_lf=B1_LPF;//the loop filter params don't change???
 	spll_obj->lpf_coeff.B0_lf=B0_LPF;
 	spll_obj->lpf_coeff.A1_lf=A1_LPF;
-	spll_obj->delta_T=	DELTA_T;
+	spll_obj->delta_T=	DELTA_T;*/
+	PLLCoeffUpdate((double)1/(double)SAMPLING_FREQ,(float)(2*3.14159*(float)60),&PLLSync);
 	configureTimer2A();	
 }
 
@@ -123,8 +122,7 @@ static inline void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	//Creates a voltage signal that has a phase 90 degrees off of the original and cancels out 2fsw
 	//Returns: Vbeta 
 	//*****************************************************************
-	//spll_obj->osg_u[0]=(spll_obj->osg_u[0]/3300);
-	//spll_obj->osg_u[0]=_IQ23mpy(spll_obj->osg_coeff.osg_b0,(spll_obj->u[0]-spll_obj->u[2]))+_IQ23mpy(spll_obj->osg_coeff.osg_a1,spll_obj->osg_u[1])+_IQ23mpy(spll_obj->osg_coeff.osg_a2,spll_obj->osg_u[2]);
+
 	spll_obj->osg_u[0]=spll_obj->osg_coeff.osg_b0*(spll_obj->u[0]- spll_obj->u[2])+spll_obj->osg_coeff.osg_a1*spll_obj->osg_u[1]+spll_obj->osg_coeff.osg_a2*spll_obj->osg_u[2];
 	spll_obj->osg_u[2]=spll_obj->osg_u[1];  
 	spll_obj->osg_u[1]=spll_obj->osg_u[0];
@@ -145,28 +143,28 @@ static inline void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	//PI Controller that filters out harmonics of Vq 
 	//Returns: Filtered output signal
 	//*****************************************************************************
+
 	spll_obj->ylf[0]=spll_obj->ylf[1]+(spll_obj->lpf_coeff.B0_lf*spll_obj->u_Q[0])+(spll_obj->lpf_coeff.B1_lf*spll_obj->u_Q[1]);
-	//spll_obj->ylf[0]=(spll_obj->ylf[0]>(20.0))?(20.0):spll_obj->ylf[0];
-	//spll_obj->ylf[0]=(spll_obj->ylf[0] < (-20.0))?(-20.0):spll_obj->ylf[0];
 	spll_obj->ylf[1]=spll_obj->ylf[0];
 	spll_obj->u_Q[1]=spll_obj->u_Q[0];
-	//spll_obj->u_D[1]=spll_obj->u_D[0];
+	spll_obj->u_D[1]=spll_obj->u_D[0];
 	//---------------------------------//
 	// VCO 
 	// Internal voltage oscillator that changes based on the error from PLL
 	//---------------------------------//
-	spll_obj->fo=spll_obj->fn+spll_obj->ylf[0]; //fn=ko in the diagram, term applied to the LPF output
-	spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*(2*3.1415926));
+
+spll_obj->fo=spll_obj->fn+spll_obj->ylf[0]; //update output frequency: w0+ylf[0]
+	spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*((float)2.0*(float)3.1415926));
 	if(spll_obj->theta[0]>(2*3.1415926)){
 		spll_obj->theta[0]=spll_obj->theta[0]-(2*3.1415926); //convert it back to degrees b/c it was in radians???
 	}
 	spll_obj->theta[1]=spll_obj->theta[0];
 
-	spll_obj->sin=sin(spll_obj->theta[0]); //SPLL_SOGI_SINE
-	spll_obj->cos=cos(spll_obj->theta[0]);
+	spll_obj->sin=sinf (spll_obj->theta[0]); //SPLL_SOGI_SINE
+	spll_obj->cos=cosf (spll_obj->theta[0]);
 		//ADD IN THE ERROR FOR THE THETA FOR POWER CONTROL
 	//MULTIPLY THE SIN(THETA) BY 1000 in order to compare with the Triangle Wave 
-	waveform=(3300*spll_obj->sin);
+	inputValue=(int)ceil((3300*spll_obj->sin));
 	
 			
 }
@@ -176,12 +174,13 @@ static inline void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 void PLLCoeffUpdate(double delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
 {
 	float osgx,osgy,temp;
-	spll->lpf_coeff.B1_lf=B1_LPF;
+		spll->lpf_coeff.B1_lf=B1_LPF;
 	spll->lpf_coeff.B0_lf=B0_LPF;
 	spll->lpf_coeff.A1_lf=A1_LPF;
 	spll->delta_T=	(double)1/(double)SAMPLING_FREQ;
+	spll->fn=((float)60);
 	spll->osg_coeff.osg_k=0.5; 
-	osgx=(float)(2.0*0.5*wn*delta_T);
+	osgx=(float)(2.0*0.5*wn*delta_T); //overwritting fn
 	spll->osg_coeff.osg_x=osgx;
 	osgy=(float)(wn*delta_T*wn*delta_T);
 	spll->osg_coeff.osg_y=(osgy);
