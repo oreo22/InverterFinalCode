@@ -131,11 +131,11 @@ uint32_t saw_index=0;
 	uint32_t cSawtoothValue=0;
 void Timer1AIntHandler(void){
   TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);                // clear the timer interrupt
-	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
+	//GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
 	//int inputValue= adcRawInput[adc_input_index].PE0;
 	int inputNeg= (-1* inputValue)+ 3300;
-	cSawtoothValue=sawtooth[saw_index-1]*dcValue; 
-	cSawtoothValue=cSawtoothValue/dcDesired;
+	cSawtoothValue=sawtooth[saw_index-1];//*dcValue; 
+	cSawtoothValue=cSawtoothValue;///dcDesired;
 		if(inputValue >= cSawtoothValue) {
 				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, GPIO_PIN_0);
 		}
@@ -151,6 +151,6 @@ void Timer1AIntHandler(void){
 			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, 0x00);
 		}
 	saw_index= (saw_index %25 )+1;
-			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
+	//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
 }
 

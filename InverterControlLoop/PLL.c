@@ -155,8 +155,8 @@ static inline void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 
 spll_obj->fo=spll_obj->fn+spll_obj->ylf[0]; //update output frequency: w0+ylf[0]
 	spll_obj->theta[0]=spll_obj->theta[1]+((spll_obj->fo*spll_obj->delta_T)*((float)2.0*(float)3.1415926));
-	if(spll_obj->theta[0]>(2*3.1415926)){
-		spll_obj->theta[0]=spll_obj->theta[0]-(2*3.1415926); //convert it back to degrees b/c it was in radians???
+	if(spll_obj->theta[0]>(float)1.0){
+		spll_obj->theta[0]=(float)0.0;//spll_obj->theta[0]-(2*3.1415926); //convert it back to degrees b/c it was in radians???
 	}
 	spll_obj->theta[1]=spll_obj->theta[0];
 
@@ -173,7 +173,7 @@ spll_obj->fo=spll_obj->fn+spll_obj->ylf[0]; //update output frequency: w0+ylf[0]
  
 void PLLCoeffUpdate(double delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
 {
-	float osgx,osgy,temp;
+	float osgx,osgy,value;
 		spll->lpf_coeff.B1_lf=B1_LPF;
 	spll->lpf_coeff.B0_lf=B0_LPF;
 	spll->lpf_coeff.A1_lf=A1_LPF;
@@ -184,12 +184,12 @@ void PLLCoeffUpdate(double delta_T, float wn, volatile SPLL_1ph_SOGI *spll)
 	spll->osg_coeff.osg_x=osgx;
 	osgy=(float)(wn*delta_T*wn*delta_T);
 	spll->osg_coeff.osg_y=(osgy);
-	temp=(float)1.0/(osgx+osgy+4.0);
-	spll->osg_coeff.osg_b0=((float)osgx*temp);
+	value=(float)1.0/(osgx+osgy+4.0);
+	spll->osg_coeff.osg_b0=((float)osgx*value);
 	spll->osg_coeff.osg_b2=((-1.0)*spll->osg_coeff.osg_b0);
-	spll->osg_coeff.osg_a1=((float)(2.0*(4.0-osgy))*temp);
-	spll->osg_coeff.osg_a2=((float)(osgx-osgy-4)*temp);
-	spll->osg_coeff.osg_qb0=((float)(0.5*osgy)*temp);
+	spll->osg_coeff.osg_a1=((float)(2.0*(4.0-osgy))*value);
+	spll->osg_coeff.osg_a2=((float)(osgx-osgy-4)*value);
+	spll->osg_coeff.osg_qb0=((float)(0.5*osgy)*value);
 	spll->osg_coeff.osg_qb1=(spll->osg_coeff.osg_qb0*(2.0));
 	spll->osg_coeff.osg_qb2=spll->osg_coeff.osg_qb0;
 }
