@@ -31,7 +31,7 @@
 //
 //*****************************************************************************
 uint32_t PWMTaskInit(void);
-void PWM_duty_change_chopper(int dutyCycle);
-void PWM_duty_change_wind(int dutyCycle);
-
+void configureTimer1A(void);
+void Timer1AIntHandler(void);
+void PWM0IntHandler(void);
 #endif // __LED_TASK_H__

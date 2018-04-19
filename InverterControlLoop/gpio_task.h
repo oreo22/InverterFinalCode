@@ -34,7 +34,7 @@
 uint32_t GPIOTaskInit(void);
 void GPIO_PB2_SET_HIGH(void);
 void GPIO_PB2_SET_LOW(void);
-void Timer1AIntHandler(void);
-void configureTimer1A(void);
+//void Timer1AIntHandler(void);
+//void configureTimer1A(void);
 void GPIOTask(void);
 #endif // __LED_TASK_H__

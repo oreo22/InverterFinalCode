@@ -15,6 +15,7 @@
 .\rvmdk\adc_task.o: ..\driverlib\interrupt.h
 .\rvmdk\adc_task.o: ..\inc\hw_ints.h
 .\rvmdk\adc_task.o: gpio_task.h
+.\rvmdk\adc_task.o: pwm_task.h
 .\rvmdk\adc_task.o: PLL.h
 .\rvmdk\adc_task.o: IQmathLib.h
 .\rvmdk\adc_task.o: C:\Program Files (x86)\Keil\ARM\ARMCC\bin\..\include\limits.h

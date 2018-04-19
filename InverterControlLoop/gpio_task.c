@@ -31,14 +31,14 @@
 //
 //*****************************************************************************
 #define GPIOSTASKSTACKSIZE        128         // Stack size in words
-#define SWITCHING_FREQ  500000//300000//250000 //10000*25 samples
+#define SWITCHING_FREQ  330000//300000//250000 //10000*25 samples
 #define TIMER1A_PRIORITY 1
 #define dcDesired 7000
 #define voltageDivider 3
 
 extern AdcData_t *adcRawInput;
 extern uint16_t adc_input_index;
-int inputValue=0;
+//int inputValue=0;
 uint16_t dcValue=0;
 double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
 double ma=0;
@@ -77,6 +77,7 @@ void GPIO_PB2_SET_LOW(void) {
 	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0x00);
 }
 	
+extern double new_theta;
 //*****************************************************************************
 //
 // Initializes the GPIO and the Timer for Leg A & B Switching
@@ -91,7 +92,7 @@ uint32_t GPIOTaskInit(void)
 	GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE,  GPIO_PIN_6 | GPIO_PIN_3 | GPIO_PIN_2 | GPIO_PIN_1 | GPIO_PIN_0 );
 	GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE,GPIO_PIN_2 | GPIO_PIN_3 );
 	GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_2 | GPIO_PIN_3 );
-	configureTimer1A();
+	//configureTimer1A();
     // Create the task.
 	
 	
@@ -105,52 +106,53 @@ uint32_t GPIOTaskInit(void)
 	return(1);
 	
 }
-uint32_t clockTime=0;
-void configureTimer1A(void){
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1); // Enable Timer 1 Clock
-	TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
-  TimerLoadSet(TIMER1_BASE, TIMER_A, SysCtlClockGet()/SWITCHING_FREQ); // is set to 80MHz according to main file, Reload Value = fclk/fswitch
-	//Configuring the interrupts	
-	TimerIntRegister(TIMER1_BASE, TIMER_A, &Timer1AIntHandler);
-	IntPrioritySet(INT_TIMER1A, 0);
-	TimerEnable(TIMER1_BASE, TIMER_A);	// Start Timer 1A
-	TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-	IntDisable(INT_TIMER1A);
-	TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-}
+//uint32_t clockTime=0;
+//void configureTimer1A(void){
+//  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1); // Enable Timer 1 Clock
+//	TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
+//  TimerLoadSet(TIMER1_BASE, TIMER_A, SysCtlClockGet()/SWITCHING_FREQ); // is set to 80MHz according to main file, Reload Value = fclk/fswitch
+//	//Configuring the interrupts	
+//	TimerIntRegister(TIMER1_BASE, TIMER_A, &Timer1AIntHandler);
+//	IntPrioritySet(INT_TIMER1A, 1);
+//	TimerEnable(TIMER1_BASE, TIMER_A);	// Start Timer 1A
+//	TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+//	IntDisable(INT_TIMER1A);
+//	TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+//}
 
-  //double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
-//If the peak isn't, change the scaling factor of the sawtooth to the ratio of the maxIncomingSignal/3.3, so it's a percentage of the full. Modulate the whole sawtooth to 
-//(if incoming signal is greater than 3.3, ignore value), do this calculation elsewhere 
+//  //double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
+////If the peak isn't, change the scaling factor of the sawtooth to the ratio of the maxIncomingSignal/3.3, so it's a percentage of the full. Modulate the whole sawtooth to 
+////(if incoming signal is greater than 3.3, ignore value), do this calculation elsewhere 
 
-uint32_t sawtooth[25] = {1650, 1860, 2060,2270,2480,2680,2890,3090, 3300,3090,2890,2680, 2480, 2270,2060, 1860 ,1650 ,1440, 1240 ,1030 ,830 ,620, 410, 210, 0};
-//float VCtrlIn[18]={1,0.7,0.8,0.9,0.1,0.7,1.1,1.5,1.8,12,13,14,15,17,18,21,2.3,2.4}; 
-uint32_t saw_index=0;
-// PD2 is the A branch, PD3 is the B branch 
-//sFactor=1
-	uint32_t cSawtoothValue=0;
-void Timer1AIntHandler(void){
-  TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);                // clear the timer interrupt
-	//GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
-	//int inputValue= adcRawInput[adc_input_index].PE0;
-	int inputNeg= (-1* inputValue)+ 3300;
-	cSawtoothValue=sawtooth[saw_index-1];//*dcValue; 
-	cSawtoothValue=cSawtoothValue;///dcDesired;
-		if(inputValue >= cSawtoothValue) {
-				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, GPIO_PIN_0);
-		}
-		if(inputValue < cSawtoothValue  ){ 
-			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, 0x00);
-		}
-		if (inputNeg > cSawtoothValue){
-//			GPIO_PORTD_DATA_R =0x010;  //PD2 off, PD3 on
-			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, GPIO_PIN_1);
-		}
-		if(inputNeg < cSawtoothValue){ 
-			//GPIO_PORTD_DATA_R =0x020;  //PD2 on, PD3 off 
-			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, 0x00);
-		}
-	saw_index= (saw_index %25 )+1;
-	//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
-}
-
+//int sawtooth[33] = {1650, 1860, 2060,2270,2480,2680,2890,3090, 3300,3090,2890,2680, 2480, 2270,2060, 1860 ,1650 ,1440, 1240 ,1030 ,830 ,620, 410, 210, 0,210,410,620,830,1030,1240,1440};
+//	//float VCtrlIn[18]={1,0.7,0.8,0.9,0.1,0.7,1.1,1.5,1.8,12,13,14,15,17,18,21,2.3,2.4}; 
+//uint32_t saw_index=0;
+//// PD2 is the A branch, PD3 is the B branch 
+////sFactor=1
+//	int cSawtoothValue=0;
+//void Timer1AIntHandler(void){
+//  TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);                // clear the timer interrupt
+//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
+//	cSawtoothValue=sawtooth[saw_index-1];//*dcValue; 
+//	cSawtoothValue=cSawtoothValue-1650;///dcDesired;
+///*	inputValue=(int)(1650.0*new_theta);
+//	int inputNeg= (-1* inputValue);
+//	
+//		
+//		if(inputValue >= cSawtoothValue) {
+//				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, GPIO_PIN_0);
+//		}
+//		if(inputValue < cSawtoothValue  ){ 
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, 0x00);
+//		}
+//		if (inputNeg > cSawtoothValue){
+////			GPIO_PORTD_DATA_R =0x010;  //PD2 off, PD3 on
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, GPIO_PIN_1);
+//		}
+//		if(inputNeg < cSawtoothValue){ 
+//			//GPIO_PORTD_DATA_R =0x020;  //PD2 on, PD3 off 
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, 0x00);
+//		}*/
+//	saw_index= (saw_index %33 )+1;
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0x00);
+//}

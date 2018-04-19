@@ -445,6 +445,16 @@
               <FileType>4</FileType>
               <FilePath>.\IQmathLib.lib</FilePath>
             </File>
+            <File>
+              <FileName>pwm_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pwm_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pwm_task.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

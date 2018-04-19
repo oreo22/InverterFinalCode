@@ -10,6 +10,7 @@
 .\rvmdk\main.o: ..\driverlib/uart.h
 .\rvmdk\main.o: ..\utils/uartstdio.h
 .\rvmdk\main.o: C:\Program Files (x86)\Keil\ARM\ARMCC\bin\..\include\stdarg.h
+.\rvmdk\main.o: pwm_task.h
 .\rvmdk\main.o: adc_task.h
 .\rvmdk\main.o: gpio_task.h
 .\rvmdk\main.o: ..\driverlib\interrupt.h

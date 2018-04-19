@@ -344,7 +344,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>0</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -444,6 +444,11 @@
               <FileName>IQmathLib.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\IQmathLib.lib</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pwm_task.c</FilePath>
             </File>
           </Files>
         </Group>

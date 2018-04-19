@@ -15,7 +15,7 @@
 #include "interrupt.h" //for interrupt
 #include "hw_ints.h" //for INT_TIMER2A
 #include "gpio_task.h" //for gpio to be interfaced to adc
-
+#include "pwm_task.h"
 #include "PLL.h"
 #include "IQmathLib.h"
 //#include "heap_1.h"
@@ -26,7 +26,7 @@
 //
 //*****************************************************************************
 #define ADC_SEQUENCE2           2
-#define ADC_SEQUENCE2_PRIORITY  2
+#define ADC_SEQUENCE2_PRIORITY  1
 
 //*****************************************************************************
 //
@@ -56,6 +56,7 @@ void setAdcData (AdcData_t *data);
 uint16_t DataSize=ARRAY_SIZE * sizeof(AdcData_t);
 AdcData_t adcRawInput[ARRAY_SIZE ];
 
+extern SPLL_1ph_SOGI PLLSync;
 uint16_t adc_input_index = 0;
 extern int inputValue;
 extern uint16_t dcValue;
@@ -137,14 +138,14 @@ uint32_t ADCTaskInit(void(*pTask)(AdcData_t pDataStruct))
     //IntMasterEnable(); //needed? Should be non critical
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE); 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0); 
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2);
     GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_3 | GPIO_PIN_2 | GPIO_PIN_1 | GPIO_PIN_0); //must have enabled ADC first
-    TimerDisable(TIMER0_BASE, TIMER_A);
-    TimerControlTrigger(TIMER0_BASE, TIMER_A, true); //enable TIMER0A trigger to ADC
-    TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC); // timer module is disabled before being configured to periodic, left in disabled state
-    TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet()/SAMPLING_FREQ); //SysCltClockGet returns count for 1 second so SysCtlClockGet() / 1000 sets the Timer0B load value to 1ms.
-		TimerIntDisable(TIMER0_BASE, 0xFFFFFFFF ); //disable all interrupts for this timer
-    TimerEnable(TIMER0_BASE, TIMER_A);
+    TimerDisable(TIMER2_BASE, TIMER_A);
+    TimerControlTrigger(TIMER2_BASE, TIMER_A, true); //enable TIMER2A trigger to ADC
+    TimerConfigure(TIMER2_BASE, TIMER_CFG_PERIODIC); // timer module is disabled before being configured to periodic, left in disabled state
+    TimerLoadSet(TIMER2_BASE, TIMER_A, SysCtlClockGet()/6000); //SysCltClockGet returns count for 1 second so SysCtlClockGet() / 1000 sets the TIMER2B load value to 1ms.
+		TimerIntDisable(TIMER2_BASE, 0xFFFFFFFF ); //disable all interrupts for this timer
+    TimerEnable(TIMER2_BASE, TIMER_A);
 		
     ADCClockConfigSet(ADC0_BASE, ADC_CLOCK_RATE_EIGHTH , 1); //last param is divider
     ADCSequenceDisable(ADC0_BASE, ADC_SEQUENCE2); 
@@ -175,36 +176,44 @@ void setAdcData (AdcData_t *data) {
 	data->PE2 = 4095;
 	data->PE3 = 4095;
 }
-int correctedInput=0;
+float correctedInput=0;
 float testing=0;
 extern SPLL_1ph_SOGI PLLSync;
+	double fwave[100 ];
+uint16_t w_index = 0;
 void ADC0Seq2_Handler(void)
 {
 	//GPIO_PB2_SET_HIGH();
     ADCIntClear(ADC0_BASE, ADC_SEQUENCE2); // Clear the timer interrupt flag.
-	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
+	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, GPIO_PIN_6);
 	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE0);
-		ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE1); //dc value
-	//	inputValue= (adcRawInput[adc_input_index].PE0* 3300)/4095;
-		correctedInput=(adcRawInput[adc_input_index].PE0* 3300)/4095;
-		dcValue=(adcRawInput[adc_input_index].PE1* 3300)/4095;
-		dcValue=dcValue*3;
-		PLLSync.u[0] =((float) correctedInput)/3300;
-		correctedInput=inputValue-scbLevelShift; //take out that level shift 
-		sum_squares+=correctedInput*correctedInput;
-			adc_input_index = (adc_input_index + 1) % (ARRAY_SIZE);
+	 
+	//fwave[w_index]=PLLSync.AC_input;
+	correctedInput=(adcRawInput[adc_input_index].PE0*3300)/4095;
+	correctedInput=correctedInput/3300;
+	PLLSync.AC_input =(((float) correctedInput)-0.5)*2;
+	//correctedInput=(correctedInput* 3300);
+	//correctedInput=adcRawInput[adc_input_index].PE0-scbLevelShift; //take out that level shift
+	//sum_squares+=correctedInput*correctedInput;
+	
+	//inputValue= (adcRawInput[adc_input_index].PE0* 3300)/4095;
+//	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE1); //dc value
+//	dcValue=(adcRawInput[adc_input_index].PE1* 3300)/4095;
+//	dcValue=dcValue*3;
+		
+		adc_input_index = (adc_input_index + 1) % (ARRAY_SIZE);
+		//w_index = (w_index + 1) % (100);
 		if(adc_input_index==(ARRAY_SIZE - 1)){
 			rmsFlag=1;
 		}
 
-		//Calling the PLL		
-		IntEnable(INT_TIMER2A);
-		IntPendSet(INT_TIMER2A); 
+		//Calling the PLL	
+		PLLRun(&PLLSync);
 	/*	
 			xSemaphoreGiveFromISR(arrayFull, &xHigherPriorityTaskWoken);
 			sqrt(rms/ARRAY_SIZE) //alt way to calculate when the array is full
 		}*/
-//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0x00);
+//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0x00);
 
 }
 

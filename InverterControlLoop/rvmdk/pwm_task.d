@@ -26,3 +26,5 @@
 .\rvmdk\pwm_task.o: ..\driverlib\interrupt.h
 .\rvmdk\pwm_task.o: ..\inc\hw_ints.h
 .\rvmdk\pwm_task.o: ..\driverlib\pin_map.h
+.\rvmdk\pwm_task.o: ..\driverlib\timer.h
+.\rvmdk\pwm_task.o: adc_task.h

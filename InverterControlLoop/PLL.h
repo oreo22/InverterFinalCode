@@ -5,45 +5,38 @@
 
 //*********** Structure Definition ********//
 typedef struct{
-	float osg_k;
-	float osg_x;
-	float osg_y;
-	float osg_b0;
-	float osg_b2;
-	float osg_a1;
-	float osg_a2;
-	float osg_qb0;
-	float osg_qb1;
-	float osg_qb2;
+float B1_notch;
+float B0_notch;
+float A2_notch;
+float A1_notch;
 }OSG_COEFF;
 typedef struct{
-	float B1_lf;
-	float B0_lf;
-	float A1_lf;
+float B1_lf;
+float B0_lf;
+float A1_lf;
 }LPF_COEFF;
 typedef struct{
-	float u[3]; // Ac Input
-	float osg_u[3];
-	float osg_qu[3];
-	float u_Q[2];
-	float u_D[2];
-	float ylf[2];
-	float fo; // output frequency of PLL
-	float fn; //nominal frequency
-	float theta[2];
-	float cos;
-	float sin;
-	float delta_T;
-	OSG_COEFF osg_coeff;
-	LPF_COEFF lpf_coeff;
+float AC_input;
+float theta[2];
+float cos[2];
+float sin[2];
+float wo;
+float wn;
+OSG_COEFF notch_coeff;
+LPF_COEFF lpf_coeff;
+float Upd[3];
+float ynotch[3];
+float ylf[2];
+float delta_t;
 }SPLL_1ph_SOGI;
+
 //*********** Function Declarations *******//
 void PLLTask(void);
 void PLLTaskInit(uint16_t Grid_freq, double DELTA_T,volatile LPF_COEFF lpf_coeff, SPLL_1ph_SOGI *spll_obj);
-static inline void PLLRun(SPLL_1ph_SOGI *spll_obj); //pass in a pofloater 
-void PLLCoeffUpdate(double delta_T, float wn, volatile SPLL_1ph_SOGI *spll);
-void Timer2AIntHandler(void); //PLL ISR
-void configureTimer2A(void); //ISR Init
+void PLLRun(SPLL_1ph_SOGI *spll_obj); //pass in a pofloater 
+void SPLL_1ph_notch_coeff_update(float delta_T, float wn,float c2, float c1, SPLL_1ph_SOGI *spll_obj);
+void TIMER0AIntHandler(void); //PLL ISR
+void configureTIMER0A(void); //ISR Init
 #endif 
 
 //*********** Macro Definition ***********//
