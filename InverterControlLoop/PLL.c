@@ -129,21 +129,26 @@ double sinewave[1000 ];
 uint16_t s_index = 0;
 	double coswave[1000 ];
 uint16_t c_index = 0;
-
+float oldValue=-1;
+char count=0;
 void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 // Update the spll_obj->u[0] with the grid value before calling this routine
 	
 	//status ^=GPIO_PIN_3;
+//	count++;
+	//Frequency Update
+//	if(oldValue>0 && spll_obj->AC_input<=0){ //zero crossing 
+//            if(coswave[c_index] !=60){
+//							 coswave[c_index]=6000/count;
+//						}            
+//						count=0;
+//		}
 	//*****************************************************************************
 	//Phase Detect
 	//*****************************************************************
 	spll_obj->Upd[0]=spll_obj->AC_input*spll_obj->cos[1];
 /*	coswave[c_index]= spll_obj->AC_input;
 	c_index = (c_index + 1) % (100);*/
-	
-	//Do we need to multiply the error by 2?
-	//spll_obj->Upd[0]=spll_obj->Upd[0]*2;
-
 	
 	//*****************************************************************************
 	//Notch Filter
@@ -157,51 +162,126 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	//Returns: Filtered output signal
 	//*****************************************************************************
 	spll_obj->ylf[0]=spll_obj->ylf[1]+(spll_obj->lpf_coeff.B0_lf*spll_obj->ynotch[0])+(spll_obj->lpf_coeff.B1_lf*spll_obj->ynotch[1]);
-
+	spll_obj->wo=spll_obj->wn+spll_obj->ylf[0]; //update the output frequency in w (2*pi*f)
+	
 	//---------------------------------//
 	// VCO 
 	// Internal voltage oscillator that changes based on the error from PLL
 	//---------------------------------//
-	//update the output frequency in w (2*pi*f)
-	spll_obj->wo=spll_obj->wn+spll_obj->ylf[0];
-	float newWo=(2*3.14159*100)+spll_obj->ylf[0]; 
-	//ylf(1)=min([ylf(1) 200]);
 	
+	
+	// Put in the phase shift: Phase angle (deg) ? = time delay ? t × frequency f × 360
+	uint8_t degreeDesired=10;
+	float newTimeShift=((degreeDesired)/(360*60))*10^3; 
+	
+	
+	//compute theta value (uncessesary for notch)
+	spll_obj->theta[0]=spll_obj->theta[1]+(spll_obj->wo*spll_obj->delta_t); //*(float)(0.159154943)
+	if(spll_obj->sin[0]>(float)(6.2832)){ //greater than 2 pi
+		spll_obj->theta[0]=(float)(0.0);
+	}
 
-//	fwave[w_index]=spll_obj->wo;
-//	w_index = (w_index + 1) % (100);
-	
-	
-	//integration process to compute sine and cosine
-	spll_obj->sin[0]=spll_obj->sin[1]+((spll_obj->delta_t*spll_obj->wo)*spll_obj->cos[1]);
-	spll_obj->cos[0]=spll_obj->cos[1]-((spll_obj->delta_t*spll_obj->wo)*spll_obj->sin[1]);
-	float newSin=spll_obj->sin[1]+(spll_obj->delta_t*(newWo)*spll_obj->cos[1]);
+//	%% Convert theta into an index to read table, goes from 0 to 2 pi. i go from 0 to 1 or 0 to pi/2 
+//  % Update phase accumulator and extract the sine table index from it
+//   % Mysin(1)=sin(theta(1));
+//   %  Mycos(1)=cos(theta(1));
+//Looking up Sine values
+   float sinTheta=spll_obj->theta[0];
+	int8_t sineSign=1;
+    if(spll_obj->theta[0]> (3.14159/2) && spll_obj->theta[0]< (3.14159)){
+       sinTheta=3.14159-spll_obj->theta[0];
+		}
+    
+    if(spll_obj->theta[0]> 3.14159 && spll_obj->theta[0]< ((3*3.14159)/2)){ //Q3
+        sinTheta=spll_obj->theta[0]-3.14159;
+       sineSign=-1;
+    }
+    if(spll_obj->theta[0]> ((3*3.14159)/2) && spll_obj->theta[0] < (2*3.14159)){ //Q4
+        sinTheta=(2*3.14159)-spll_obj->theta[0];
+        sineSign=-1;
+    }
+    sinTheta=sinTheta*(2/3.14159);
+    int sinIndex=(int)ceil(sinTheta*(1024-1) +1);
+    spll_obj->sin[0]= sineSign*sineTable[sinIndex];
+    sineSign=1;
 
-	//limit the oscillator integrators
+    float cosIndex=spll_obj->theta[0]+(3.14159/2); //changing the theta for cos
+    if(cosIndex>(2*3.14159)){ //Q1
+        cosIndex=cosIndex-(2*3.14159);
+    }
+    if(cosIndex> (3.14159/2) && cosIndex< (3.14159)) {//Q2
+       cosIndex=3.14159-cosIndex;
+    }
+    if(cosIndex> 3.14159 && cosIndex< ((3*3.14159)/2)){//Q3
+        cosIndex=cosIndex-3.14159;
+           sineSign=-1;
+    }
+    if(cosIndex> ((3*3.14159)/2) && cosIndex < (2*3.14159)){ //Q4
+        cosIndex=(2*3.14159)-cosIndex;
+           sineSign=-1;
+    }
+    cosIndex=cosIndex*(2/3.14159);
+    int cosTheta=ceil(cosIndex*(1024-1) +1);
+    spll_obj->cos[0]=sineSign*sineTable[cosTheta];
+		
+		//Do the same thing again for phase shifted VCO
+		sinTheta=spll_obj->theta[0]+newTimeShift;
+		sineSign=1;
+    if(sinTheta>(2*3.14159)){ //Q1
+        sinTheta=sinTheta-(2*3.14159);
+    }
+    if(sinTheta> (3.14159/2) && sinTheta< (3.14159)){
+       sinTheta=3.14159-sinTheta;
+		}
+    
+    if(sinTheta> 3.14159 && sinTheta< ((3*3.14159)/2)){ //Q3
+        sinTheta=sinTheta-3.14159;
+       sineSign=-1;
+    }
+    if(sinTheta> ((3*3.14159)/2) && sinTheta < (2*3.14159)){ //Q4
+        sinTheta=(2*3.14159)-sinTheta;
+        sineSign=-1;
+    }
+    sinTheta=sinTheta*(2/3.14159);
+    sinIndex=(int)ceil(sinTheta*(1024-1) +1);
+		new_Mag=((sineSign*sineTable[sinIndex])+1)/2;
+		//new_Mag=((newSin)+1)/2;
+		inputValue=(int)(3300*(new_Mag));
 	
-	if(spll_obj->sin[0]>(float)(1)){ //Mysin(1)=min([Mysin(1) 1]);
-		spll_obj->sin[0]=(float)(1);
-	}
-	else if(spll_obj->sin[0]<(float)(-1)){ //Mysin(1)=max([Mysin(1) -1]);
-		spll_obj->sin[0]=(float)(-1);
-	}
-	if(newSin>(float)(1)){ //Mysin(1)=min([Mysin(1) 1]);
-		newSin=(float)(1);
-	}
-	else if(newSin<(float)(-1)){ //Mysin(1)=max([Mysin(1) -1]);
-		newSin=(float)(-1);
-	}
-	if(spll_obj->cos[0]>(float)(1)){ //Mycos(1)=min([Mycos(1) 1]);
-		spll_obj->cos[0]=(float)(1);
-	}
-	else if(spll_obj->cos[0]<(float)(-1)){ //Mycos(1)=max([Mycos(1) -1]);
-		spll_obj->cos[0]=(float)(-1);
-	}
+//	//ylf(1)=min([ylf(1) 200]);
+//	
+
+////	fwave[w_index]=spll_obj->wo;
+////	w_index = (w_index + 1) % (100);
+//	
+//	
+//	//integration process to compute sine and cosine
+//	spll_obj->sin[0]=spll_obj->sin[1]+((spll_obj->delta_t*spll_obj->wo)*spll_obj->cos[1]);
+//	spll_obj->cos[0]=spll_obj->cos[1]-((spll_obj->delta_t*spll_obj->wo)*spll_obj->sin[1]);
+//	float newSin=spll_obj->sin[1]+(spll_obj->delta_t*(newWo)*spll_obj->cos[1]);
+
+//	//limit the oscillator integrators
+//	
+//	if(spll_obj->sin[0]>(float)(1)){ //Mysin(1)=min([Mysin(1) 1]);
+//		spll_obj->sin[0]=(float)(1);
+//	}
+//	else if(spll_obj->sin[0]<(float)(-1)){ //Mysin(1)=max([Mysin(1) -1]);
+//		spll_obj->sin[0]=(float)(-1);
+//	}
+//	if(newSin>(float)(1)){ //Mysin(1)=min([Mysin(1) 1]);
+//		newSin=(float)(1);
+//	}
+//	else if(newSin<(float)(-1)){ //Mysin(1)=max([Mysin(1) -1]);
+//		newSin=(float)(-1);
+//	}
+//	if(spll_obj->cos[0]>(float)(1)){ //Mycos(1)=min([Mycos(1) 1]);
+//		spll_obj->cos[0]=(float)(1);
+//	}
+//	else if(spll_obj->cos[0]<(float)(-1)){ //Mycos(1)=max([Mycos(1) -1]);
+//		spll_obj->cos[0]=(float)(-1);
+//	}
 //	sinewave[s_index]=spll_obj->sin[0];
 //	s_index = (s_index + 1) % (1000);
-	new_Mag=((spll_obj->sin[0])+1)/2;
-	//new_Mag=((newSin)+1)/2;
-	inputValue=(int)(3300*(new_Mag));
 //	coswave[c_index]=inputValue;
 //	c_index = (c_index + 1) % (1000);
 //	if(c_index==0){

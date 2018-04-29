@@ -40,8 +40,7 @@ extern AdcData_t *adcRawInput;
 extern uint16_t adc_input_index;
 //int inputValue=0;
 uint16_t dcValue=0;
-double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
-double ma=0;
+
 //*****************************************************************************
 //
 // This task toggles the user selected LED at a user selected frequency. User
@@ -57,8 +56,7 @@ void GPIOTask(void) //void *pvParameters)
 	//	IntEnable(INT_TIMER1A);
 	//	xSemaphoreGive(g_pUARTSemaphore);
 		//TimerIntDisable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-	 sFactor=(dcValue*voltageDivider);//dcDesired;
-		//ma=sFactor/dcDesired;
+	 
 	
 		GPIO_PB2_SET_HIGH();
 		if(counter == 10000){

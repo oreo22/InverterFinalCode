@@ -160,7 +160,7 @@ int main(void)
 	//IntEnable(INT_TIMER2A);
 	while(1){
 		ADCTask();
-		GPIOTask();
+	//	GPIOTask();
 		/*uint16_t rms_filter(uint16_t sample)
 		{
     static uint16_t rms = INITIAL;

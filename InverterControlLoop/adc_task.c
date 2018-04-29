@@ -60,14 +60,18 @@ extern SPLL_1ph_SOGI PLLSync;
 uint16_t adc_input_index = 0;
 extern int inputValue;
 extern uint16_t dcValue;
-uint16_t rmsFlag;
+uint8_t rmsFlag=0;
 
 extern double sFactor; //ma
 //static AdcData_t max;
 //static AdcData_t min;
 //static AdcData_t rms;
+
+//RMS values
 uint32_t rms=0;
-uint16_t rmsFlag=0;
+uint32_t Vref=6;
+uint32_t Vctrl=0;
+float Ki,Kp=0;
 static int sum_squares=0; //accumulator of the instant samples 
 uint32_t scbLevelShift=1650; //(1.65*4095/3.3)
 extern double sFactor;
@@ -102,6 +106,26 @@ static double one_step_newton_raphson_sqrt(double val, double hint)
 uint32_t status=0;
 void ADCTask(void)//void *pvParameters
 {
+	//Get the rms values of Igrid and Vgrid
+	//Update frequency
+	//Run control loop for volt and var
+	//if anti-islanding time, switch strategies and same for bat discharge
+	
+	//------------Updating Values------------
+	
+	/* if ya wanna find the mean
+	for(int i = 0; i < ARRAY_SIZE; i++) {
+						avg_sum_load_vrms += adcRawSS0Input[i].PE0;
+						avg_sum_load_irms += adcRawSS0Input[i].PE1;
+						avg_sum_dist_vrms += adcRawSS0Input[i].PE2;
+						avg_sum_dist_irms += adcRawSS0Input[i].PE3;
+					//UARTprintf("%d,",(adcRawSS0Input[i].PE0 * 3300) / 4095);
+					}
+					scb_mean_load_vrms = avg_sum_load_vrms/ARRAY_SIZE;
+					scb_mean_load_irms = avg_sum_load_irms/ARRAY_SIZE;
+					scb_mean_dist_vrms = avg_sum_dist_vrms/ARRAY_SIZE;
+					scb_mean_dist_irms = avg_sum_dist_irms/ARRAY_SIZE; 
+//UARTprintf("AVG: %d\n",scb_mean_load_vrms);*/
 		if(rmsFlag==1){// Polish RMS value 
 				status ^=GPIO_PIN_3;
 		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
@@ -109,9 +133,19 @@ void ADCTask(void)//void *pvParameters
       sum_squares = sqrt(sum_squares);
       rms = ((sum_squares) * 3300) / 4095;
 			rmsFlag=0;
-		//	UARTprintf("RMS on PE0 %d \n",rms);
-			UARTprintf("DC Voltage on PE1 %u \n",7000/(dcValue*3));
 		}
+		
+		//freq done in the PLL loop
+		
+		//Volt Control
+		uint32_t rmsError=Vref-rms;
+		Vctrl=rmsError*Ki+rmsError*Kp;
+
+		
+		
+		//Var Control in PLL file?
+		
+		
 		//UARTprintf("Current InputValue %d \n", inputValue);
 		// https://stackoverflow.com/questions/28807537/any-faster-rms-value-calculation-in-c#28808472 
 	
@@ -183,10 +217,10 @@ extern SPLL_1ph_SOGI PLLSync;
 uint16_t w_index = 0;
 void ADC0Seq2_Handler(void)
 {
-	//GPIO_PB2_SET_HIGH();
-    ADCIntClear(ADC0_BASE, ADC_SEQUENCE2); // Clear the timer interrupt flag.
+  ADCIntClear(ADC0_BASE, ADC_SEQUENCE2); // Clear the timer interrupt flag.
 	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, GPIO_PIN_6);
 	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE0);
+	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE1); //dc value
 	 
 	//fwave[w_index]=PLLSync.AC_input;
 	correctedInput=(adcRawInput[adc_input_index].PE0*3300)/4095;
@@ -194,10 +228,10 @@ void ADC0Seq2_Handler(void)
 	PLLSync.AC_input =(((float) correctedInput)-0.5)*2;
 	//correctedInput=(correctedInput* 3300);
 	//correctedInput=adcRawInput[adc_input_index].PE0-scbLevelShift; //take out that level shift
-	//sum_squares+=correctedInput*correctedInput;
+	sum_squares+=correctedInput*correctedInput;
 	
 	//inputValue= (adcRawInput[adc_input_index].PE0* 3300)/4095;
-//	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE1); //dc value
+//	
 //	dcValue=(adcRawInput[adc_input_index].PE1* 3300)/4095;
 //	dcValue=dcValue*3;
 		
