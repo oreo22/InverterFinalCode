@@ -57,7 +57,7 @@
 //*****************************************************************************
 #define PWMTASKSTACKSIZE        128         // Stack size in words
 #define TIMER1_PRIORITY 2
-#define SWITCHING_FREQ  33000
+#define SWITCHING_FREQ  10000
 
 //*****************************************************************************
 //
@@ -128,7 +128,7 @@ uint32_t PWMTaskInit(void)
 	  GPIOPinConfigure(GPIO_PB7_M0PWM1);
     GPIOPinTypePWM(GPIO_PORTB_BASE, GPIO_PIN_7);
     PWMGenConfigure(PWM0_BASE, PWM_GEN_0, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_DB_NO_SYNC);
-    PWMGenPeriodSet(PWM0_BASE, PWM_GEN_0, 8000); //80MHz/60kHz
+    PWMGenPeriodSet(PWM0_BASE, PWM_GEN_0, SysCtlClockGet()/SWITCHING_FREQ); //8000); //80MHz/60kHz
 		PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0, 0); //D= D*8000, so.5=4000
     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1,0 );
     PWMOutputState(PWM0_BASE, PWM_OUT_1_BIT, true);
@@ -205,9 +205,9 @@ void Timer1AIntHandler(void){
 //	saw_index= (saw_index %33 )+1;
 //	//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
 }
-uint32_t oldPulseW=0;
+
 uint32_t pulseW=0;
-uint32_t pulseWArray[100];
+
 void PWM0IntHandler(void)
 {
 		//Just set duty cycles of the incoming waveform 
@@ -216,13 +216,7 @@ void PWM0IntHandler(void)
 		int inputNeg= (-1* inputValue)+3300;
  		pulseW=(inputValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
 		uint32_t negpulseW=(inputNeg*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
-		pulseWArray[saw_index]=pulseW;
-		
-	saw_index= (saw_index %100)+1;
-	if( pulseW<=oldPulseW){
-		bool fun=false;
-	}
-	oldPulseW=pulseW;
+
 		PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0,pulseW); //PB6
 		PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1,negpulseW); //PB7
 //	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0);

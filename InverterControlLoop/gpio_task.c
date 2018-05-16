@@ -31,7 +31,7 @@
 //
 //*****************************************************************************
 #define GPIOSTASKSTACKSIZE        128         // Stack size in words
-#define SWITCHING_FREQ  330000//300000//250000 //10000*25 samples
+
 #define TIMER1A_PRIORITY 1
 #define dcDesired 7000
 #define voltageDivider 3

@@ -71,10 +71,12 @@ extern double sFactor; //ma
 uint32_t rms=0;
 uint32_t Vref=6;
 uint32_t Vctrl=0;
+uint32_t rmsError[2];
 float Ki,Kp=0;
 static int sum_squares=0; //accumulator of the instant samples 
 uint32_t scbLevelShift=1650; //(1.65*4095/3.3)
-extern double sFactor;
+double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
+double ma=0;
 
 unsigned long adcCount = 0; //debug
 int sqrt(int input) {
@@ -127,8 +129,8 @@ void ADCTask(void)//void *pvParameters
 					scb_mean_dist_irms = avg_sum_dist_irms/ARRAY_SIZE; 
 //UARTprintf("AVG: %d\n",scb_mean_load_vrms);*/
 		if(rmsFlag==1){// Polish RMS value 
-				status ^=GPIO_PIN_3;
-		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
+			status ^=GPIO_PIN_3;
+			GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
 			sum_squares/= ARRAY_SIZE;
       sum_squares = sqrt(sum_squares);
       rms = ((sum_squares) * 3300) / 4095;
@@ -138,12 +140,12 @@ void ADCTask(void)//void *pvParameters
 		//freq done in the PLL loop
 		
 		//Volt Control
-		uint32_t rmsError=Vref-rms;
-		Vctrl=rmsError*Ki+rmsError*Kp;
-
-		
-		
-		//Var Control in PLL file?
+		rmsError[0]=Vref-rms;
+		Vctrl=(rmsError[1]*Ki+rmsError[0]*Kp)+rms;
+		float dcDesired=Vctrl*1.414; //assuming it's a sine wave
+		//sFactor=(dcValue*voltageDivider);//dcDesired;
+		ma=sFactor/dcDesired;
+		rmsError[1]=rmsError[0];
 		
 		
 		//UARTprintf("Current InputValue %d \n", inputValue);
