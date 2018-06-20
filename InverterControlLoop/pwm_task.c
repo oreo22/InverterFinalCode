@@ -57,7 +57,7 @@
 //*****************************************************************************
 #define PWMTASKSTACKSIZE        128         // Stack size in words
 #define TIMER1_PRIORITY 2
-#define SWITCHING_FREQ  10000
+#define SWITCHING_FREQ  6000 //10000
 
 //*****************************************************************************
 //

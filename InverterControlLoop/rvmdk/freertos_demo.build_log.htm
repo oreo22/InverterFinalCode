@@ -3,89 +3,34 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\AcerPC\Desktop\GradSchool\TM4C1234g\ORI-COPY\ControllableInverter_Notch_PLL\InverterControlLoop\freertos_demo.uvproj
-Project File Date:  04/08/2018
+C:\Users\Oriana\Desktop\InverterFinalCode\InverterControlLoop\freertos_demo.uvproj
+Project File Date:  06/18/2018
 
 <h2>Output:</h2>
 Build target 'freertos_demo'
-compiling PLL.c...
-PLL.c(205): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(spll_obj->theta[0] > (QPI2) && spll_obj->theta[0]< (PI)){ //Q2
-PLL.c(205): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(spll_obj->theta[0] > (QPI2) && spll_obj->theta[0]< (PI)){ //Q2
-PLL.c(206): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-         sinTheta=PI-spll_obj->theta[0];
-PLL.c(209): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(spll_obj->theta[0]> PI && spll_obj->theta[0]< (Q3PI2)){ //Q3
-PLL.c(209): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(spll_obj->theta[0]> PI && spll_obj->theta[0]< (Q3PI2)){ //Q3
-PLL.c(210): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          sinTheta=spll_obj->theta[0]-PI;
-PLL.c(213): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(spll_obj->theta[0]> (Q3PI2) && spll_obj->theta[0] < (Q2PI)){ //Q4
-PLL.c(213): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(spll_obj->theta[0]> (Q3PI2) && spll_obj->theta[0] < (Q2PI)){ //Q4
-PLL.c(214): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          sinTheta=(Q2PI)-spll_obj->theta[0];
-PLL.c(227): warning:  #177-D: variable "fun" was declared but never referenced
-                        bool fun=false;
-PLL.c(237): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      float cosIndex=spll_obj->theta[0]+(QPI2); //changing the theta for cos
-PLL.c(238): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex>(Q2PI)){ //Q1
-PLL.c(239): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          cosIndex=cosIndex-(Q2PI);
-PLL.c(241): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex> (QPI2) && cosIndex< (PI)) {//Q2
-PLL.c(241): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex> (QPI2) && cosIndex< (PI)) {//Q2
-PLL.c(242): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-         cosIndex=PI-cosIndex;
-PLL.c(244): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex> PI && cosIndex< (Q3PI2)){//Q3
-PLL.c(244): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex> PI && cosIndex< (Q3PI2)){//Q3
-PLL.c(245): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          cosIndex=cosIndex-PI;
-PLL.c(248): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex> (Q3PI2) && cosIndex < (Q2PI)){ //Q4
-PLL.c(248): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(cosIndex> (Q3PI2) && cosIndex < (Q2PI)){ //Q4
-PLL.c(249): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          cosIndex=(Q2PI)-cosIndex;
-PLL.c(259): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta>(Q2PI)){ //Q1
-PLL.c(260): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          sinTheta=sinTheta-(Q2PI);
-PLL.c(262): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta> (QPI2) && sinTheta< (PI)){
-PLL.c(262): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta> (QPI2) && sinTheta< (PI)){
-PLL.c(263): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-         sinTheta=PI-sinTheta;
-PLL.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta> PI && sinTheta< (Q3PI2)){ //Q3
-PLL.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta> PI && sinTheta< (Q3PI2)){ //Q3
-PLL.c(267): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          sinTheta=sinTheta-PI;
-PLL.c(270): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta> (Q3PI2) && sinTheta < (Q2PI)){ //Q4
-PLL.c(270): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      if(sinTheta> (Q3PI2) && sinTheta < (Q2PI)){ //Q4
-PLL.c(271): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          sinTheta=(Q2PI)-sinTheta;
-PLL.c(301): warning:  #177-D: variable "fun" was declared but never referenced
-                bool fun=false;
-PLL.c(317): warning:  #1-D: last line of file ends without a newline
-  }
-PLL.c: 35 warnings, 0 errors
 linking...
-Program Size: Code=10460 RO-data=5592 RW-data=1644 ZI-data=9572  
+Program Size: Code=10428 RO-data=5592 RW-data=1644 ZI-data=9572  
 After Build - User command #1: fromelf --bin --output .\rvmdk\freertos_demo.bin .\rvmdk\freertos_demo.axf
-".\rvmdk\freertos_demo.axf" - 0 Error(s), 35 Warning(s).
-Load "C:\\Users\\AcerPC\\Desktop\\GradSchool\\TM4C1234g\\ORI-COPY\\ControllableInverter_Notch_PLL\\InverterControlLoop\\rvmdk\\freertos_demo.axf" 
+".\rvmdk\freertos_demo.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\InverterControlLoop\\rvmdk\\freertos_demo.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Connection failed!, error code=&d
+Error: Flash Download failed  -  Target DLL has been cancelled
+Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\InverterControlLoop\\rvmdk\\freertos_demo.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
+Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\InverterControlLoop\\rvmdk\\freertos_demo.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\InverterControlLoop\\rvmdk\\freertos_demo.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+</pre>
+</body>
+</html>

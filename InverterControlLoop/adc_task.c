@@ -230,7 +230,7 @@ void ADC0Seq2_Handler(void)
 	PLLSync.AC_input =(((float) correctedInput)-0.5)*2;
 	//correctedInput=(correctedInput* 3300);
 	//correctedInput=adcRawInput[adc_input_index].PE0-scbLevelShift; //take out that level shift
-	sum_squares+=correctedInput*correctedInput;
+ 	sum_squares+=correctedInput*correctedInput;
 	
 	//inputValue= (adcRawInput[adc_input_index].PE0* 3300)/4095;
 //	
