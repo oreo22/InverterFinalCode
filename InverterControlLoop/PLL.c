@@ -66,7 +66,7 @@ void PLLTask(void)
 	
 
 }
-SPLL_1ph_SOGI PLLSync;
+SPLL_1ph_SOGI VSync;
 
 
 //*****************************************************************************
@@ -108,8 +108,8 @@ spll_obj->delta_t=DELTA_T;
 	spll_obj->lpf_coeff.B0_lf=B0_LPF;
 	spll_obj->lpf_coeff.A1_lf=A1_LPF;
 	spll_obj->delta_T=	DELTA_T;*/
-	//PLLCoeffUpdate((double)1/(double)SAMPLING_FREQ,(float)(Q2PI*(float)60),&PLLSync);
-	//SPLL_1ph_notch_coeff_update((double)1/(double)SAMPLING_FREQ,(float)(Q2PI*(float)60),0.1,0.00001,&PLLSync);
+	//PLLCoeffUpdate((double)1/(double)SAMPLING_FREQ,(float)(Q2PI*(float)60),&VSync);
+	//SPLL_1ph_notch_coeff_update((double)1/(double)SAMPLING_FREQ,(float)(Q2PI*(float)60),0.1,0.00001,&VSync);
 	//configureTIMER0A();	
 }
 
@@ -310,7 +310,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 void TIMER0AIntHandler(void){
 	TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
-	PLLRun(&PLLSync);
+	PLLRun(&VSync);
 	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0x00);
 	
 		//IntDisable(INT_TIMER0A);

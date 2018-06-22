@@ -431,11 +431,6 @@
               <FilePath>.\adc_task.c</FilePath>
             </File>
             <File>
-              <FileName>gpio_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\gpio_task.c</FilePath>
-            </File>
-            <File>
               <FileName>PLL.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\PLL.c</FilePath>
@@ -454,6 +449,11 @@
               <FileName>pwm_task.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\pwm_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>gpio_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\gpio_task.c</FilePath>
             </File>
           </Files>
         </Group>

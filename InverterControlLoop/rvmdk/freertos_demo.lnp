@@ -4,10 +4,10 @@
 ".\rvmdk\uartstdio.o"
 ".\rvmdk\ustdlib.o"
 ".\rvmdk\adc_task.o"
-".\rvmdk\gpio_task.o"
 ".\rvmdk\pll.o"
 ".\IQmathLib.lib"
 ".\rvmdk\pwm_task.o"
+".\rvmdk\gpio_task.o"
 "..\driverlib\rvmdk\driverlib.lib"
 --library_type=microlib --strict --scatter "freertos_demo.sct"
 

@@ -46,11 +46,14 @@ void Timer_15s_Init(void){
 
 void SysTick_Handler(void){ //change the value of this to determine the time between changing duty cycles 
 	//count = (count+1)%8; //if i divide by 8, i get 0.5 second changes which will really test the system 
+	//count = (count+1)%240; 
 	count = (count+1)%240; 
 	//if (count == 7){
 	if (count == 239){
 		flag = 1;
+		PF3 ^= 0x08;
 	}
+
 }
 
 void heartbeat(void){
@@ -61,8 +64,8 @@ void heartbeat(void){
                                            // configure PF2 as GPIO
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFF00FF)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;                  // disable analog functionality on PF
-  PF2 ^= 0x04;              // turn off LED
-	PF3 ^= 0x08;
+  //PF2 ^= 0x04;              // turn off LED
+	
 	//PF2 = 0;
 	//PF3 = 0;
 	
@@ -119,11 +122,9 @@ int main(void){
 		}
 		
 		if (index == 0){
-			PF3 ^= 0x08;
 			PF2 = 0;
 		} else{
 			PF2 ^= 0x04;
-			PF3 = 0;
 		}
 		//GPIO_PORTF_DATA_R ^= 0x04;             // toggle LED
 		

@@ -29,10 +29,14 @@
 #define ARRAY_SIZE 500 //window of the array
 
 struct AdcData{
-	uint32_t PE0;
-	uint32_t PE1;
-	uint32_t PE2;
-	uint32_t PE3;
+	int PE0;
+	int PE1;
+	int PE2;
+	int PE3;
+//	uint32_t PE0;
+//	uint32_t PE1;
+//	uint32_t PE2;
+//	uint32_t PE3;
 };
 typedef struct AdcData AdcData_t;
 
@@ -46,4 +50,5 @@ void ADC_Print(void);
 void ADC_PrintJSON(void); 
 uint16_t ADC_PrintFreq(void);
 void ADCTask(void);
+
 #endif // __LED_TASK_H__

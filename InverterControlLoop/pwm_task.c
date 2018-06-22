@@ -206,17 +206,18 @@ void Timer1AIntHandler(void){
 //	//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
 }
 
-uint32_t pulseW=0;
-
+extern double ma;
 void PWM0IntHandler(void)
 {
 		//Just set duty cycles of the incoming waveform 
 	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
     PWMGenIntClear(PWM0_BASE, PWM_GEN_0, PWM_INT_CNT_ZERO);
 		int inputNeg= (-1* inputValue)+3300;
- 		pulseW=(inputValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
-		uint32_t negpulseW=(inputNeg*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
-
+		int newValue=(inputValue)* ma;
+		int newNegValue=inputNeg*ma;
+ 		uint32_t pulseW=(newValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
+		uint32_t negpulseW=(newNegValue*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
+		
 		PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0,pulseW); //PB6
 		PWMPulseWidthSet(PWM0_BASE, PWM_OUT_1,negpulseW); //PB7
 //	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0);
