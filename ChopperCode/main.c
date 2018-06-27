@@ -49,7 +49,7 @@ void SysTick_Handler(void){ //change the value of this to determine the time bet
 	//count = (count+1)%240; 
 	count = (count+1)%240; 
 	//if (count == 7){
-	if (count == 239){
+	if (count == 120){// 15 secs per cycle
 		flag = 1;
 		PF3 ^= 0x08;
 	}
@@ -121,12 +121,12 @@ int main(void){
 			PWM0B2_Duty(summer_duty[index]);
 		}
 		
-		if (index == 0){
-			PF2 = 0;
-		} else{
-			PF2 ^= 0x04;
-		}
-		//GPIO_PORTF_DATA_R ^= 0x04;             // toggle LED
+//		if (index == 0){
+//			PF2 = 0;
+//		} else{
+//			PF2 ^= 0x04;
+//		}
+		GPIO_PORTF_DATA_R ^= 0x04;             // toggle LED
 		
 	}
 }

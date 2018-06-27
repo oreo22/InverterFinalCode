@@ -127,25 +127,12 @@ void configureTIMER0A(void){
 	//IntEnable(INT_TIMER0A); //Have to have it enabled in order
 }
 
-double waveform=0;
-unsigned char	signF=1;
-float sinewave[100 ];
+
+//float sinewave[100 ];
 uint16_t s_index = 0;
-float oldValue=-1;
-char count=0;
 void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 // Update the spll_obj->u[0] with the grid value before calling this routine
 	
-	//status ^=GPIO_PIN_3;
-//	count++;
-	//Frequency Update
-//	if(oldValue>0 && spll_obj->AC_input<=0){ //zero crossing 
-//            if(coswave[c_index] !=60){
-							// coswave[c_index]=6000/count;
-//						}            
-//						count=0;
-//		}
-	oldValue=spll_obj->AC_input;
 	//*****************************************************************************
 	//Phase Detect
 	//*****************************************************************
@@ -175,7 +162,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	
 	
 	// Put in the phase shift: Phase angle (deg) ? = time delay ? t × frequency f × 360
-	uint8_t degreeDesired=13.5; //changed in var control //the board introduces a 13.5 phase shift. it's been corrected to the best of my abilities, but still
+	float degreeDesired=13.5; //changed in var control //the board introduces a 13.5 phase shift. it's been corrected to the best of my abilities, but still
 	float newTimeShift=(degreeDesired*PI)/180;
 	
 	
@@ -221,7 +208,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 		
 
 
-		sinewave[s_index]=spll_obj->sin[0];
+		//sinewave[s_index]=spll_obj->sin[0];
 		s_index = (s_index + 1) % (100);
 		if(s_index==99){
 			bool fun=false;

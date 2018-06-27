@@ -138,23 +138,23 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>281</LineNumber>
+          <LineNumber>198</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>2340</Address>
+          <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
+          <BreakIfRCount>0</BreakIfRCount>
           <Filename>.\adc_task.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\freertos_demo\adc_task.c\281</Expression>
+          <Expression></Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>294</LineNumber>
+          <LineNumber>206</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
@@ -172,57 +172,42 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sinewave,0x0A</ItemText>
+          <ItemText>ma,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>s_index</ItemText>
+          <ItemText>dcMeas,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>spll_obj-&gt;wo</ItemText>
+          <ItemText>sFactor</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sinIndex,0x0A</ItemText>
+          <ItemText>rmsError,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sinTheta</ItemText>
+          <ItemText>inputNeg,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PLLSync</ItemText>
+          <ItemText>Vctrl,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>correctedInput</ItemText>
+          <ItemText>Vdc,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>result_load_vrms,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>scb_mean_load_vrms</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>dcMeas,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>10</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>adcRawInput</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -278,10 +263,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>12</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>136</TopLine>
-      <CurrentLine>152</CurrentLine>
+      <CurrentLine>144</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -312,7 +297,7 @@
       <Focus>0</Focus>
       <ColumnNumber>16</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1261</TopLine>
+      <TopLine>1276</TopLine>
       <CurrentLine>1292</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\utils\uartstdio.c</PathWithFileName>
@@ -326,10 +311,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>35</ColumnNumber>
+      <ColumnNumber>45</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>926</TopLine>
+      <CurrentLine>957</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\utils\ustdlib.c</PathWithFileName>
       <FilenameWithoutPath>ustdlib.c</FilenameWithoutPath>
@@ -342,10 +327,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>34</ColumnNumber>
+      <ColumnNumber>1</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>30</TopLine>
-      <CurrentLine>46</CurrentLine>
+      <TopLine>154</TopLine>
+      <CurrentLine>136</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\adc_task.c</PathWithFileName>
       <FilenameWithoutPath>adc_task.c</FilenameWithoutPath>
@@ -358,10 +343,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>14</ColumnNumber>
+      <ColumnNumber>2</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>61</TopLine>
-      <CurrentLine>62</CurrentLine>
+      <TopLine>74</TopLine>
+      <CurrentLine>168</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\PLL.c</PathWithFileName>
       <FilenameWithoutPath>PLL.c</FilenameWithoutPath>
@@ -390,10 +375,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>28</ColumnNumber>
+      <ColumnNumber>9</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>59</TopLine>
-      <CurrentLine>60</CurrentLine>
+      <TopLine>177</TopLine>
+      <CurrentLine>178</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\pwm_task.c</PathWithFileName>
       <FilenameWithoutPath>pwm_task.c</FilenameWithoutPath>
@@ -422,10 +407,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>14</ColumnNumber>
+      <ColumnNumber>5</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>52</TopLine>
-      <CurrentLine>53</CurrentLine>
+      <TopLine>50</TopLine>
+      <CurrentLine>76</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\gpio_task.c</PathWithFileName>
       <FilenameWithoutPath>gpio_task.c</FilenameWithoutPath>

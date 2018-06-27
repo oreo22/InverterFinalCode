@@ -17,7 +17,6 @@
 #include "gpio_task.h" //for gpio to be interfaced to adc
 #include "pwm_task.h"
 #include "PLL.h"
-#include "IQmathLib.h"
 //#include "heap_1.h"
 
 //*****************************************************************************
@@ -71,8 +70,9 @@ int Vref=10000;
 int Vctrl=0;
 int dcMeas=0;
 int Vdc=0;
-uint32_t rmsError[2];
-float Ki,Kp=0;
+int rmsError[2];
+float Kp=0.03;
+float Ki=0.8;
 static int sum_squares=0; //accumulator of the instant samples 
 uint32_t scbLevelShift=1650; //(1.65*4095/3.3)
 double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
@@ -122,6 +122,15 @@ static double one_step_newton_raphson_sqrt(double val, double hint)
 	return (probe+hint) /2;
 }
 
+//double sqroot(double square)
+//{
+//    double root=square/3;
+//    int i;
+//    if (square <= 0) return 0;
+//    for (i=0; i<32; i++)
+//        root = (root + square / root) / 2;
+//    return root;
+//}
 uint32_t status=0;
 void ADCTask(void)//void *pvParameters
 {
@@ -188,11 +197,12 @@ void ADCTask(void)//void *pvParameters
 		UARTprintf("DC Voltage %d \n", Vdc);
 		//Volt Control 
 		rmsError[0]=Vref - result_load_vrms;
-		Vctrl=(rmsError[1]*Ki+rmsError[0]*Kp)+Vref;
+		//Vctrl=(rmsError[1]*Ki+rmsError[0]*Kp)+Vref;
+		Vctrl=Vref;
 		ma=((double)Vctrl)/ ((double) Vdc);
-
+		ma=0.99;
 		//UARTprintf("Current corrected ma %d \n", sFactor);
-		rmsError[1]=rmsError[0];
+ 		rmsError[1]=rmsError[0];
 		
 	
 		}
@@ -289,7 +299,7 @@ uint16_t w_index = 0;
 void ADC0Seq2_Handler(void)
 {
   ADCIntClear(ADC0_BASE, ADC_SEQUENCE2); // Clear the timer interrupt flag.
-	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, GPIO_PIN_6);
+	// 	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, GPIO_PIN_6);
 	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE0);
 	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE0, &adcRawInput[adc_input_index].PE1); //dc value
 	dcMeas=adcRawInput[adc_input_index].PE1;
