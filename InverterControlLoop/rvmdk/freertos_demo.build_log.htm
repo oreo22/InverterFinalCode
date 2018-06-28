@@ -7,3 +7,119 @@ C:\Users\Oriana\Desktop\InverterFinalCode\InverterControlLoop\freertos_demo.uvpr
 Project File Date:  06/20/2018
 
 <h2>Output:</h2>
+Build target 'freertos_demo'
+compiling pwm_task.c...
+pwm_task.c(97): warning:  #177-D: function "PWMTask" was declared but never referenced
+  static void PWMTask(void *pvParameters)
+pwm_task.c: 1 warning, 0 errors
+linking...
+Program Size: Code=10356 RO-data=5592 RW-data=1644 ZI-data=9260  
+After Build - User command #1: fromelf --bin --output .\rvmdk\freertos_demo.bin .\rvmdk\freertos_demo.axf
+".\rvmdk\freertos_demo.axf" - 0 Error(s), 1 Warning(s).
+g:  #177-D: function "PWMTask" was declared but never referenced
+  static void PWMTask(void *pvParameters)
+pwm_task.c: 1 warning, 0 errors
+compiling gpio_task.c...
+linking...
+.\rvmdk\freertos_demo.axf: Error: L6218E: Undefined symbol Timer1AIntHandler (referred from pwm_task.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 1 error messages.
+".\rvmdk\freertos_demo.axf" - 1 Error(s), 3 Warning(s).
+Target not created
+de=10020 RO-data=5592 RW-data=1644 ZI-data=9204  
+After Build - User command #1: fromelf --bin --output .\rvmdk\freertos_demo.bin .\rvmdk\freertos_demo.axf
+".\rvmdk\freertos_demo.axf" - 0 Error(s), 5 Warning(s).
+os_demo.axf" - 1 Error(s), 6 Warning(s).
+Target not created
+40-D: missing return statement at end of non-void function "PWMTaskInit"
+  }
+pwm_task.c(97): warning:  #177-D: function "PWMTask" was declared but never referenced
+  static void PWMTask(void *pvParameters)
+pwm_task.c: 2 warnings, 0 errors
+compiling gpio_task.c...
+".\rvmdk\freertos_demo.axf" - 2 Error(s), 8 Warning(s).
+Target not created
+eta[0]> PI && spll_obj->theta[0]< (Q3PI2)){ //Q3
+PLL.c(196): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(spll_obj->theta[0]> PI && spll_obj->theta[0]< (Q3PI2)){ //Q3
+PLL.c(197): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          sinTheta=spll_obj->theta[0]-PI;
+PLL.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(spll_obj->theta[0]> (Q3PI2) && spll_obj->theta[0] < (Q2PI)){ //Q4
+PLL.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(spll_obj->theta[0]> (Q3PI2) && spll_obj->theta[0] < (Q2PI)){ //Q4
+PLL.c(201): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          sinTheta=(Q2PI)-spll_obj->theta[0];
+PLL.c(224): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      double cosIndex=spll_obj->theta[0]+(QPI2); //changing the theta for cos
+PLL.c(288): warning:  #177-D: variable "fun" was declared but never referenced
+                bool fun=false;
+PLL.c(304): warning:  #1-D: last line of file ends without a newline
+  }
+PLL.c: 13 warnings, 0 errors
+".\rvmdk\freertos_demo.axf" - 1 Error(s), 17 Warning(s).
+Target not created
+ewline
+  }
+PLL.c: 14 warnings, 0 errors
+".\rvmdk\freertos_demo.axf" - 1 Error(s), 18 Warning(s).
+Target not created
+single-precision operand implicitly converted to double-precision
+      if(cosIndex> (QPI2) && cosIndex< (PI)) {//Q2
+PLL.c(228): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(cosIndex> (QPI2) && cosIndex< (PI)) {//Q2
+PLL.c(229): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+         cosIndex=PI-cosIndex;
+PLL.c(231): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(cosIndex> PI && cosIndex< (Q3PI2)){//Q3
+PLL.c(231): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(cosIndex> PI && cosIndex< (Q3PI2)){//Q3
+PLL.c(232): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          cosIndex=cosIndex-PI;
+PLL.c(235): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(cosIndex> (Q3PI2) && cosIndex < (Q2PI)){ //Q4
+PLL.c(235): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(cosIndex> (Q3PI2) && cosIndex < (Q2PI)){ //Q4
+PLL.c(236): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          cosIndex=(Q2PI)-cosIndex;
+PLL.c(246): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta>(Q2PI)){ //Q1
+PLL.c(247): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          sinTheta=sinTheta-(Q2PI);
+PLL.c(249): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta> (QPI2) && sinTheta< (PI)){
+PLL.c(249): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta> (QPI2) && sinTheta< (PI)){
+PLL.c(250): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+         sinTheta=PI-sinTheta;
+PLL.c(253): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta> PI && sinTheta< (Q3PI2)){ //Q3
+PLL.c(253): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta> PI && sinTheta< (Q3PI2)){ //Q3
+PLL.c(254): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          sinTheta=sinTheta-PI;
+PLL.c(257): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta> (Q3PI2) && sinTheta < (Q2PI)){ //Q4
+PLL.c(257): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      if(sinTheta> (Q3PI2) && sinTheta < (Q2PI)){ //Q4
+PLL.c(258): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          sinTheta=(Q2PI)-sinTheta;
+PLL.c(288): warning:  #177-D: variable "fun" was declared but never referenced
+                bool fun=false;
+PLL.c(304): warning:  #1-D: last line of file ends without a newline
+  }
+PLL.c: 36 warnings, 0 errors
+".\rvmdk\freertos_demo.axf" - 1 Error(s), 40 Warning(s).
+Target not created
+t a newline
+  }
+PLL.c: 36 warnings, 0 errors
+compiling pwm_task.c...
+pwm_task.c(173): warning:  #940-D: missing return statement at end of non-void function "PWMTaskInit"
+  }
+pwm_task.c(97): warning:  #177-D: function "PWMTask" was declared but never referenced
+  static void PWMTask(void *pvParameters)
+pwm_task.c: 2 warnings, 0 errors
+compiling gpio_task.c...
+".\rvmdk\freertos_demo.axf" - 1 Error(s), 43 Warning(s).
+Target not created

@@ -6,7 +6,6 @@
 .\rvmdk\pll.o: ..\driverlib/rom.h
 .\rvmdk\pll.o: ..\utils/uartstdio.h
 .\rvmdk\pll.o: C:\Keil\ARM\ARMCC\bin\..\include\stdarg.h
-.\rvmdk\pll.o: priorities.h
 .\rvmdk\pll.o: ..\driverlib\sysctl.h
 .\rvmdk\pll.o: ..\driverlib\interrupt.h
 .\rvmdk\pll.o: ..\inc\hw_ints.h

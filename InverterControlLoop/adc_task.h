@@ -29,16 +29,39 @@
 #define ARRAY_SIZE 500 //window of the array
 
 struct AdcData{
-	int PE0;
-	int PE1;
-	int PE2;
-	int PE3;
-//	uint32_t PE0;
-//	uint32_t PE1;
-//	uint32_t PE2;
-//	uint32_t PE3;
+	uint32_t PE0;
+	uint32_t PE1;
+	uint32_t PE2;
+	uint32_t PE3;
 };
 typedef struct AdcData AdcData_t;
+
+struct acValue{
+	int inst;
+	int sum;
+	int rms;
+	//mean
+	//avg_sum
+};
+typedef struct acValue acValues;
+
+struct ACPower{
+	acValues V;
+	acValues I;
+	acValues P;
+	int Q;
+	int S;
+	
+};
+typedef struct ACPower ACPower_t;
+
+struct DCPower{
+	uint32_t V;
+	uint32_t I;
+	int P;
+	int Q;
+};
+typedef struct DCPower DCPower_t;
 
 //*****************************************************************************
 //

@@ -1,3 +1,27 @@
+%% Sine Table Generator
+func = 'sin(2*pi*x)';
+% Define the range over which to optimize breakpoints
+xmin = 0;
+xmax = 0.25;
+% Define the data type and scaling for the inputs
+xdt = ufix(16);
+xscale = 2^-16;
+% Define the data type and scaling for the outputs
+ydt = sfix(16);
+yscale = 2^-14;
+% Specify the rounding method
+rndmeth = 'Floor';
+% Define the maximum acceptable error
+%errmax = 2^-20;
+% Choose even, power-of-2 spacing for breakpoints
+spacing = 'pow2';
+ % Specify the maximum number of points
+nptsmax = 1040;
+% Create the lookup table
+[xdata,lookupTable,errworst] = fixpt_look1_func_approx(func, ...
+xmin,xmax,xdt,xscale,ydt,yscale,rndmeth,[],nptsmax);
+disp(length(lookupTable));
+
 % Digital Filters
 %% Notch Filter Generation
 Fs=6000; %Sampling frequency = 50Khz

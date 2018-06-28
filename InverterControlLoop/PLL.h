@@ -17,7 +17,7 @@ float A1_lf;
 }LPF_COEFF;
 typedef struct{
 float AC_input;
-float theta[2];
+double theta[2];
 float cos[2];
 float sin[2];
 float wo;

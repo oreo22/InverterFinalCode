@@ -146,6 +146,7 @@ int main(void)
 	ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5| SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_25MHZ);  // Set the clocking to run at 80 MHz from the PLL.
 	GPIOTaskInit() ;
 	ADCTaskInit(&Producer);
+	
 	PWMTaskInit();
 	PLLTaskInit((float)60,(double)1/(double)SAMPLING_FREQ, lpf_coeff,&VSync); //uint16_t Grid_freq, long DELTA_T, volatile SPLL_1ph_SOGI *spll_obj, volatile LPF_COEFF lpf_coeff
 	ConfigureUART();
