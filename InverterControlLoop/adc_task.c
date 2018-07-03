@@ -78,23 +78,10 @@ float Ki,Kp=0;
 static int sum_squares=0; //accumulator of the instant samples 
 double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
 double ma=0;
+int dc_offset=1887;
 ACPower_t Sgrid;
-		int avg_sum_load_vrms;
-		int avg_sum_load_irms;
-		int avg_sum_dist_vrms;
-		int avg_sum_dist_irms; 
-		int scb_mean_load_vrms; //2022 //Power Supply 4.131
-		int scb_mean_load_irms; //2891 //
-		int scb_mean_dist_vrms; //0000 //Power Supply 4.131
-		int scb_mean_dist_irms; //0000 //
-		int result_load_vrms = 0;
-		int result_load_irms = 0;
-		int result_dist_vrms = 0;
-		int result_dist_irms = 0;
-		int sum_load_vrms = 0;
-		int sum_load_irms = 0;
-		int sum_dist_vrms = 0;
-		int sum_dist_irms = 0;
+int Vmin=0;
+int Vmax=0;
 
 int sqrt(int input)  // OR isqrt16 ( uint16 n ) OR  isqrt8 ( uint8 n ) - respectively [ OR overloaded as isqrt (uint?? n) in C++ ]  
 {  
@@ -121,6 +108,8 @@ int sqrt(int input)  // OR isqrt16 ( uint16 n ) OR  isqrt8 ( uint8 n ) - respect
 } 
 int tempMax=0;
 uint32_t status=0;
+int avg_sum_V =0;
+int avg_V=0;
 void ADCTask(void)//void *pvParameters
 {
 	//Get the rms values of Igrid and Vgrid
@@ -151,8 +140,7 @@ void ADCTask(void)//void *pvParameters
 					//Divide by N
     Sgrid.V.sum /= ARRAY_SIZE;
 		Sgrid.I.sum /= ARRAY_SIZE;
-		Sgrid.P.sum /= ARRAY_SIZE;
-					
+		Sgrid.P.sum /= ARRAY_SIZE;	
 			//Sqrt the thing
 		Sgrid.V.sum = sqrt(Sgrid.V.sum);
 		Sgrid.I.sum = sqrt(Sgrid.I.sum);
@@ -160,22 +148,25 @@ void ADCTask(void)//void *pvParameters
 			//Undo the scaling from adc
 		Sgrid.V.rms = ((Sgrid.V.sum) * 3300) / 4095;
 		Sgrid.I.rms = ((Sgrid.I.sum) * (6600)) / 4095; //(2* (Vrefp - Vrefn)) / 4095
-		Sgrid.P.rms = ((Sgrid.P.sum) * 3300) / 4095;
-			
+		Sgrid.P.rms = ((Sgrid.P.sum) );
+		Sgrid.V.rms = Sgrid.V.rms;	// (for upper numbers)
 		
 		//Undo the scaling from the signal conditioning board
-		Sgrid.V.rms=Sgrid.V.rms*14.027; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform
-		Sgrid.I.rms=Sgrid.I.rms*10;
-//		Sgrid.I.rms=Sgrid.I.rms/2.635;
-		Sgrid.P.rms=Sgrid.P.rms*14.027*10;
+		Sgrid.V.rms=Sgrid.V.rms*14.36; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform
+		Sgrid.I.rms=Sgrid.I.rms*7.45;
+		Sgrid.P.rms=Sgrid.P.rms*107;
 	//		Sgrid.P.rms=Sgrid.I.rms*Sgrid.V.rms;
-		UARTprintf("Current Measurement: %d \n",Sgrid.I.rms);  
-	UARTprintf("Voltage Measurement: %d \n",Sgrid.V.rms); 
+		UARTprintf("Current Measurement: %d \n",Sgrid.I.rms); 		
+	UARTprintf("Voltage Measurement: %d \n",Sgrid.V.rms);
 	UARTprintf("Power Measurement: %d \n",Sgrid.P.rms); 		
 //	tempMax=tempMax* (6600) / 4095;
 //	UARTprintf("PE3 Max %d \n",  tempMax );	
-tempMax=0;		
+			//dc_offset=(Vmin+Vmax)/2;
+		//	 Vmin=100;
+// Vmax=0;
 		rmsFlag=0;
+						status ^=GPIO_PIN_3;
+			GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
 	}
 //			scb_mean_load_vrms = avg_sum_load_vrms/ARRAY_SIZE;
 //			scb_mean_load_irms = avg_sum_load_irms/ARRAY_SIZE;
@@ -183,8 +174,7 @@ tempMax=0;
 //			scb_mean_dist_irms = avg_sum_dist_irms/ARRAY_SIZE; 
 //			//UARTprintf("AVG: %d\n",scb_mean_load_vrms);
 //			 
-//			status ^=GPIO_PIN_3;
-//			GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
+
 //	//------------Updating Values------------
 //          sum_load_vrms /= ARRAY_SIZE;
 //					sum_load_irms /= ARRAY_SIZE;
@@ -330,6 +320,7 @@ void setAdcData (AdcData_t *data) {
 }
 float correctedInput=0;
 float testing=0;
+
 extern SPLL_1ph_SOGI VSync;
 	double fwave[100 ];
 uint16_t w_index = 0;
@@ -345,19 +336,20 @@ void ADC0Seq2_Handler(void)
 
 	//Grabbing AC Values
 	//Sgrid.V_avg_sum += adcRawInput[adc_input_index].PE0;
-	Sgrid.V.inst = adcRawInput[adc_input_index].PE1 - 1937;
-	
+	Sgrid.V.inst = adcRawInput[adc_input_index].PE1-2048; //1650 in hex form
 	Sgrid.V.sum += Sgrid.V.inst * Sgrid.V.inst;
+	
+//	avg_sum_V+= Sgrid.V.inst;
 //		if(Sgrid.V.inst<0){
 //		tempMax=Sgrid.V.inst;
 //	}
-	Sgrid.I.inst= adcRawInput[adc_input_index].PE3-2028;
+	Sgrid.I.inst= adcRawInput[adc_input_index].PE3-2048; //2028;
 	Sgrid.I.sum += Sgrid.I.inst * Sgrid.I.inst;
 //	if(Sgrid.I.inst>tempMax){
 //		tempMax=Sgrid.I.inst;
 //	}
-	Sgrid.P.inst =(Sgrid.I.inst * Sgrid.V.inst);
-	Sgrid.P.sum += (Sgrid.I.inst * Sgrid.V.inst); //Sgrid.P.sum =Sgrid.P.sum +Sgrid.P.inst;
+	Sgrid.P.inst =(((Sgrid.I.inst* 6600) / 4095) * ((Sgrid.V.inst* 3300) / 4095));
+	Sgrid.P.sum =Sgrid.P.sum +Sgrid.P.inst;
 
 	
 //	//shifted_adc.PE1 = adcRawInput[adc_input_index].PE1;
