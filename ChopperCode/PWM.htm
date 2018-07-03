@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\PWM.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\PWM.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Fri Jun 22 16:18:44 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Fri Jun 29 17:17:31 2018
 <BR><P>
 <H3>Maximum Stack Usage =          8 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -764,11 +764,11 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[9b]"></a>PWM0A2_Duty</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, pwm.o(i.PWM0A2_Duty))
+<P><STRONG><a name="[96]"></a>PWM0A2_Init</STRONG> (Thumb, 240 bytes, Stack size 0 bytes, pwm.o(i.PWM0A2_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[96]"></a>PWM0A2_Init</STRONG> (Thumb, 240 bytes, Stack size 0 bytes, pwm.o(i.PWM0A2_Init))
+<P><STRONG><a name="[9b]"></a>PWM0A_Duty</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, pwm.o(i.PWM0A_Duty))
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -776,14 +776,14 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[9c]"></a>PWM0B2_Duty</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, pwm.o(i.PWM0B2_Duty))
-<BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-</UL>
-
 <P><STRONG><a name="[97]"></a>PWM0B2_Init</STRONG> (Thumb, 186 bytes, Stack size 8 bytes, pwm.o(i.PWM0B2_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = PWM0B2_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[9c]"></a>PWM0B_Duty</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, pwm.o(i.PWM0B_Duty))
+<BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[95]"></a>PWM0B_Init</STRONG> (Thumb, 168 bytes, Stack size 8 bytes, pwm.o(i.PWM0B_Init))
@@ -803,18 +803,18 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[8a]"></a>main</STRONG> (Thumb, 138 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[8a]"></a>main</STRONG> (Thumb, 134 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8 + Unknown Stack Size
 <LI>Call Chain = main &rArr; PWM0B_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heartbeat
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer_15s_Init
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0B_Init
+<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0B_Duty
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0B2_Init
-<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0B2_Duty
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0A_Init
+<LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0A_Duty
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0A2_Init
-<LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM0A2_Duty
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PLL_Init
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
 </UL>

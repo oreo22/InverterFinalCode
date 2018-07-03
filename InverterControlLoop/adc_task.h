@@ -31,8 +31,8 @@
 struct AdcData{
 	uint32_t PE0;
 	uint32_t PE1;
-	uint32_t PE2;
 	uint32_t PE3;
+	uint32_t PE4;
 };
 typedef struct AdcData AdcData_t;
 

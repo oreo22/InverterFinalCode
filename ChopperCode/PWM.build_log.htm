@@ -9,14 +9,21 @@ Project File Date:  03/09/2017
 <h2>Output:</h2>
 Build target 'PWM'
 compiling main.c...
+main.c(125): warning:  #223-D: function "UARTprintf" declared implicitly
+                        UARTprintf("%d \n", summer_duty[index] );
+main.c: 1 warning, 0 errors
+compiling uartstdio.c...
 linking...
-Program Size: Code=2404 RO-data=32 RW-data=292 ZI-data=1124  
-".\PWM.axf" - 0 Error(s), 0 Warning(s).
-Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\ChopperCode\\PWM.axf" 
-Connecting: Mode=JTAG, Speed=1000000Hz
-Erase Done.
-Programming Done.
-Verify OK.
+.\PWM.axf: Error: L6218E: Undefined symbol SysCtlPeripheralEnable (referred from uartstdio.o).
+.\PWM.axf: Error: L6218E: Undefined symbol SysCtlPeripheralPresent (referred from uartstdio.o).
+.\PWM.axf: Error: L6218E: Undefined symbol UARTCharGet (referred from uartstdio.o).
+.\PWM.axf: Error: L6218E: Undefined symbol UARTCharPut (referred from uartstdio.o).
+.\PWM.axf: Error: L6218E: Undefined symbol UARTConfigSetExpClk (referred from uartstdio.o).
+.\PWM.axf: Error: L6218E: Undefined symbol UARTEnable (referred from uartstdio.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 6 error messages.
+".\PWM.axf" - 6 Error(s), 1 Warning(s).
+Target not created
 </pre>
 </body>
 </html>

@@ -4,17 +4,18 @@
 #include "inc/hw_types.h"
 #include "driverlib/rom.h"
 #include "utils/uartstdio.h"
+#include "priorities.h"
 #include "sysctl.h" //for init ports
 #include "interrupt.h" //for interrupt
 #include "hw_ints.h" //for INT_TIMER0A
 #include "PLL.h"
+//#include "IQmathCPP.h"
+
 #include "adc_task.h"
 #include "timer.h" //for timer
 #include "gpio.h"
 #include <math.h>
 //#include "heap_1.h"
-//#include "IQmathCPP.h"
-//#include "priorities.h"
 //*****************************************************************************
 //
 // Initialize the constants of the filter
@@ -126,12 +127,25 @@ void configureTIMER0A(void){
 	//IntEnable(INT_TIMER0A); //Have to have it enabled in order
 }
 
-
-//float sinewave[100 ];
+double waveform=0;
+unsigned char	signF=1;
+float sinewave[100 ];
 uint16_t s_index = 0;
+float oldValue=-1;
+char count=0;
 void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 // Update the spll_obj->u[0] with the grid value before calling this routine
 	
+	//status ^=GPIO_PIN_3;
+//	count++;
+	//Frequency Update
+//	if(oldValue>0 && spll_obj->AC_input<=0){ //zero crossing 
+//            if(coswave[c_index] !=60){
+							// coswave[c_index]=6000/count;
+//						}            
+//						count=0;
+//		}
+	oldValue=spll_obj->AC_input;
 	//*****************************************************************************
 	//Phase Detect
 	//*****************************************************************
@@ -141,10 +155,10 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	
 	//*****************************************************************************
 	//Notch Filter
-	//Removes any harmonics that comes from twice the fundamental frequency cause of math
+	//Linearizes the incoming signal and the orthogonal signal generator from alpha beta to D-Q axis
+	//Returns: VD and VQ signal
 	//*****************************************************************************
 	spll_obj->ynotch[0]=(spll_obj->notch_coeff.B0_notch*(spll_obj->Upd[0]+spll_obj->Upd[2]))+(spll_obj->notch_coeff.B1_notch*spll_obj->Upd[1])-(spll_obj->notch_coeff.A1_notch*spll_obj->ynotch[1])- (spll_obj->notch_coeff.A2_notch*spll_obj->ynotch[2]);
-	
 	//*****************************************************************************
 	//Low Pass Filter
 	//PI Controller that filters out harmonics of Vq 
@@ -161,14 +175,14 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	
 	
 	// Put in the phase shift: Phase angle (deg) ? = time delay ? t × frequency f × 360
-	float degreeDesired=13.5; //changed in var control //the board introduces a 13.5 phase shift. it's been corrected to the best of my abilities, but still
+	uint8_t degreeDesired=13.5; //changed in var control //the board introduces a 13.5 phase shift. it's been corrected to the best of my abilities, but still
 	float newTimeShift=(degreeDesired*PI)/180;
 	
 	
 	//compute theta value 
 	spll_obj->theta[0]=spll_obj->theta[1]+(spll_obj->wo*spll_obj->delta_t); //*(float)(0.159154943)
-	if(spll_obj->theta[0]>(double)(6.2832)){ //greater than 2 pi
-		spll_obj->theta[0]=(double)(0.0);
+	if(spll_obj->theta[0]>(float)(6.2832)){ //greater than 2 pi
+		spll_obj->theta[0]=(float)(0.0);
 	}
 //	if(spll_obj->theta[0]<(float)(-6.2832)){ //greater than 2 pi
 //		spll_obj->theta[0]=(float)(0.0);
@@ -181,7 +195,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 //   % Mysin(1)=sin(theta(1));
 //   %  Mycos(1)=cos(theta(1));
 //Looking up Sine values
-  double sinTheta=spll_obj->theta[0];
+  float sinTheta=spll_obj->theta[0];
 	
 	
 //	if(s_index==99){
@@ -207,12 +221,12 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 		
 
 
-//		//sinewave[s_index]=spll_obj->sin[0];
-//		s_index = (s_index + 1) % (100);
-//		if(s_index==99){
-//			bool fun=false;
-//		}
-//		
+		sinewave[s_index]=spll_obj->sin[0];
+		s_index = (s_index + 1) % (100);
+		if(s_index==99){
+			bool fun=false;
+		}
+		
 		//		new_Mag=sineSign*(sineTable[sinIndex]);
 
 		
@@ -220,7 +234,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 		
  
 		sineSign=1;
-    double cosIndex=spll_obj->theta[0]+(QPI2); //changing the theta for cos
+    float cosIndex=spll_obj->theta[0]+(QPI2); //changing the theta for cos
     if(cosIndex>(Q2PI)){ //Q1
         cosIndex=cosIndex-(Q2PI);
     }
@@ -283,6 +297,9 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	
 	//update theta
 	spll_obj->theta[1]=spll_obj->theta[0];
+	if(spll_obj->theta[1]<=-6.2832){
+		bool fun=false;
+	}
 	//update the history of the sin and cos
 	spll_obj->sin[1]=spll_obj->sin[0];
 	spll_obj->cos[1]=spll_obj->cos[0];

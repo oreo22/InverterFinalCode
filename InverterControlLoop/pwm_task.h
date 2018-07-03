@@ -30,7 +30,7 @@
 // Prototypes for the LED task.
 //
 //*****************************************************************************
-void PWMTaskInit(void);
+uint32_t PWMTaskInit(void);
 void configureTimer1A(void);
 void Timer1AIntHandler(void);
 void PWM0IntHandler(void);

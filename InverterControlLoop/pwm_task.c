@@ -97,12 +97,27 @@ extern xSemaphoreHandle g_pUARTSemaphore;
 static void PWMTask(void *pvParameters)
 {
 }
+
+void configureTimer1A(void){
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1); // Enable Timer 1 Clock
+	TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
+  TimerLoadSet(TIMER1_BASE, TIMER_A, 165); //SysCtlClockGet()/SWITCHING_FREQ is set to 80MHz according to main file, Reload Value = fclk/fswitch
+
+//Configuring the interrupts	
+	TimerIntRegister(TIMER1_BASE, TIMER_A, &Timer1AIntHandler);
+	IntPrioritySet(INT_TIMER1A, TIMER1_PRIORITY);
+	TimerEnable(TIMER1_BASE, TIMER_A);	// Start Timer 1A
+	TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+	IntDisable(INT_TIMER1A);
+	TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+}
+
 //*****************************************************************************
 //
 // Initializes the PWM task to output a PWM to PB6 and it's complement to PB7.
 //
 //*****************************************************************************
-void PWMTaskInit(void)
+uint32_t PWMTaskInit(void)
 {
     SysCtlPWMClockSet(SYSCTL_PWMDIV_1); //set PWM clock to processor clock with multiplier of 1
 		SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0);
@@ -162,6 +177,34 @@ uint32_t saw_index=0;
 // PD2 is the A branch, PD3 is the B branch 
 //sFactor=1
 	int cSawtoothValue=0;
+void Timer1AIntHandler(void){
+  TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);                // clear the timer interrupt
+////	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
+////	inputValue=(int)(1650.0*new_theta);
+//	PWM0_0_LOAD_R=inputValue;
+//	cSawtoothValue=PWMGenPeriodGet(PWM0_BASE, PWM_GEN_1)/(SysCtlClockGet()/SWITCHING_FREQ); //normalize the count value to the 3300 range for open loop ctrl
+//	cSawtoothValue=cSawtoothValue*3300;
+//	int inputNeg= (-1* inputValue)+3300;
+////	cSawtoothValue=sawtooth[saw_index-1];//*dcValue; 
+//	//cSawtoothValue=cSawtoothValue-1650;///dcDesired;
+//		
+//		if(inputValue >= cSawtoothValue) {
+//				GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, GPIO_PIN_0);
+//		}
+//		if(inputValue < cSawtoothValue  ){ 
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0, 0x00);
+//		}
+//		if (inputNeg > cSawtoothValue){
+////			GPIO_PORTD_DATA_R =0x010;  //PD2 off, PD3 on
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, GPIO_PIN_1);
+//		}
+//		if(inputNeg < cSawtoothValue){ 
+//			//GPIO_PORTD_DATA_R =0x020;  //PD2 on, PD3 off 
+//			GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1, 0x00);
+//		}
+//	saw_index= (saw_index %33 )+1;
+//	//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0x00);
+}
 
 extern double ma;
 void PWM0IntHandler(void)
@@ -170,11 +213,8 @@ void PWM0IntHandler(void)
 	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
     PWMGenIntClear(PWM0_BASE, PWM_GEN_0, PWM_INT_CNT_ZERO);
 		int inputNeg= (-1* inputValue)+3300;
-		if(ma > 1){
-				ma=1;
-			}
-		int newValue=(inputValue)* ma;
-		int newNegValue=inputNeg*ma;
+		int newValue=(inputValue);//* ma;
+		int newNegValue=inputNeg;//*ma;
  		uint32_t pulseW=(newValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
 		uint32_t negpulseW=(newNegValue*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
 		
