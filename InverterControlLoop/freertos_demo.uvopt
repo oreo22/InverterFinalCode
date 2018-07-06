@@ -138,32 +138,45 @@
           <Name>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0TM4C123_256 -FS00 -FL040000)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>68</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>11068</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\Control.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\freertos_demo\Control.c\68</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>91</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>11922</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\Control.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\freertos_demo\Control.c\91</Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shifted_adc.PE1,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Vmin,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Vmax,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>Sgrid.V.inst</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>adcRawInput[adc_input_index].PE1,0x0A</ItemText>
+          <ItemText>QError,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -237,7 +250,7 @@
       <Focus>0</Focus>
       <ColumnNumber>55</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>268</TopLine>
+      <TopLine>284</TopLine>
       <CurrentLine>290</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup_rvmdk.S</PathWithFileName>
@@ -283,10 +296,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>32</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>134</TopLine>
-      <CurrentLine>156</CurrentLine>
+      <TopLine>256</TopLine>
+      <CurrentLine>284</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\adc_task.c</PathWithFileName>
       <FilenameWithoutPath>adc_task.c</FilenameWithoutPath>
@@ -299,10 +312,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>14</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>61</TopLine>
-      <CurrentLine>62</CurrentLine>
+      <TopLine>162</TopLine>
+      <CurrentLine>178</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\PLL.c</PathWithFileName>
       <FilenameWithoutPath>PLL.c</FilenameWithoutPath>
@@ -331,10 +344,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>29</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>186</TopLine>
-      <CurrentLine>218</CurrentLine>
+      <TopLine>179</TopLine>
+      <CurrentLine>209</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\pwm_task.c</PathWithFileName>
       <FilenameWithoutPath>pwm_task.c</FilenameWithoutPath>
@@ -363,13 +376,29 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>20</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>116</TopLine>
-      <CurrentLine>53</CurrentLine>
+      <TopLine>40</TopLine>
+      <CurrentLine>41</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\gpio_task.c</PathWithFileName>
       <FilenameWithoutPath>gpio_task.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>11</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>11</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>69</TopLine>
+      <CurrentLine>43</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Control.c</PathWithFileName>
+      <FilenameWithoutPath>Control.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -383,7 +412,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>11</FileNumber>
+      <FileNumber>12</FileNumber>
       <FileType>4</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -407,7 +436,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>12</FileNumber>
+      <FileNumber>13</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>

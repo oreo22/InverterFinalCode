@@ -45,7 +45,7 @@
 //
 //*****************************************************************************
 //xQueueHandle g_pPLLQueue;
-
+double degreeDesired;
 extern int inputValue;
 #define PLLSTACKSIZE        128         // Stack size in words
 #define TIMER0A_PRIORITY		2
@@ -175,7 +175,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 	
 	
 	// Put in the phase shift: Phase angle (deg) ? = time delay ? t × frequency f × 360
-	uint8_t degreeDesired=13.5; //changed in var control //the board introduces a 13.5 phase shift. it's been corrected to the best of my abilities, but still
+	degreeDesired=13.5; //changed in var control //the board introduces a 13.5 phase shift. it's been corrected to the best of my abilities, but still
 	float newTimeShift=(degreeDesired*PI)/180;
 	
 	

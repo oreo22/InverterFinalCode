@@ -13,6 +13,7 @@
 .\rvmdk\main.o: pwm_task.h
 .\rvmdk\main.o: adc_task.h
 .\rvmdk\main.o: gpio_task.h
+.\rvmdk\main.o: Control.h
 .\rvmdk\main.o: ..\driverlib\interrupt.h
 .\rvmdk\main.o: ..\inc\hw_ints.h
 .\rvmdk\main.o: PLL.h

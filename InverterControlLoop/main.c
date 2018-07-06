@@ -35,6 +35,7 @@
 #include "pwm_task.h"
 #include "adc_task.h"
 #include "gpio_task.h"
+#include "Control.h"
 #include "interrupt.h"
 #include "hw_ints.h" //for INT_TIMER2A
 #include "PLL.h"
@@ -140,8 +141,8 @@ extern int inputValue;
  //pointer to the SPLL_1ph_SOGI object
 volatile LPF_COEFF lpf_coeff;
 extern SPLL_1ph_SOGI VSync;
-int main(void)
-{
+extern uint8_t ctrlFlag;
+int main(void){
 	//use static globsls
 	ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5| SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_25MHZ);  // Set the clocking to run at 80 MHz from the PLL.
 	GPIOTaskInit() ;
@@ -149,9 +150,11 @@ int main(void)
 	PWMTaskInit();
 	PLLTaskInit((float)60,(double)1/(double)SAMPLING_FREQ, lpf_coeff,&VSync); //uint16_t Grid_freq, long DELTA_T, volatile SPLL_1ph_SOGI *spll_obj, volatile LPF_COEFF lpf_coeff
 	ConfigureUART();
+	//configureTimer2A();
 	UARTprintf("Start Program \n");
 	IntEnable(INT_ADC0SS2);
 	IntEnable(INT_PWM0_0);
+//	IntEnable(INT_TIMER2A);
 	//IntEnable(INT_TIMER0A);		
 	//	IntPendSet(INT_TIMER0A); 
 	//IntEnable(INT_TIMER1A);
@@ -160,6 +163,9 @@ int main(void)
 	//IntEnable(INT_TIMER2A);
 	while(1){
 		ADCTask();
+	if(ctrlFlag==1){VarControl();}
+		
+		
 	//	GPIOTask();
 		/*uint16_t rms_filter(uint16_t sample)
 		{

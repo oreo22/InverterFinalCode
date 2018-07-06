@@ -11,24 +11,9 @@ F (.\PWMtest.c)(0x582F6980)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork 
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (PLL.h)(0x57C5C6BE)
 I (PWM.h)(0x58A32B18)
-F (.\main.c)(0x5B36B37D)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+F (.\main.c)(0x5B3FC4A2)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\main.o --omf_browse .\main.crf --depend .\main.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (PLL.h)(0x57C5C6BE)
 I (PWM.h)(0x58A32B18)
 I (../inc/tm4c123gh6pm.h)(0x5B2695FA)
 F (.\PWM.h)(0x58A32B18)()
-F (.\utils\uartstdio.c)(0x5B2ABA77)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\uartstdio.o --omf_browse .\uartstdio.crf --depend .\uartstdio.d)
-I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
-I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
-I (..\inc/hw_ints.h)(0x5B2695FA)
-I (..\inc/hw_memmap.h)(0x5B2695FA)
-I (..\inc/hw_types.h)(0x5B2695FA)
-I (..\inc/hw_uart.h)(0x5B2695FA)
-I (..\driverlib/debug.h)(0x5B2695F9)
-I (..\driverlib/interrupt.h)(0x5B2695F9)
-I (..\driverlib/rom.h)(0x5B2695F9)
-I (..\driverlib/rom_map.h)(0x5B2695F9)
-I (..\driverlib/sysctl.h)(0x5B2695FA)
-I (..\driverlib/uart.h)(0x5B2695FA)
-I (..\utils/uartstdio.h)(0x5B269603)

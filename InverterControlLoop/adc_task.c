@@ -1,12 +1,13 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/rom.h"
 #include "utils/uartstdio.h"
 #include "adc_task.h"
 #include "priorities.h"
-
+#include "math.h"
 #include "adc.h" //for adc lib
 #include "hw_memmap.h" //for address bases
 #include "sysctl.h" //for init ports
@@ -17,7 +18,7 @@
 #include "gpio_task.h" //for gpio to be interfaced to adc
 #include "pwm_task.h"
 #include "PLL.h"
-#include "IQmathLib.h"
+#include "Control.h" //for adc lib
 //#include "heap_1.h"
 
 //*****************************************************************************
@@ -53,37 +54,28 @@ void setAdcData (AdcData_t *data);
 //
 //*****************************************************************************
 //AdcData_t *adcRawInput;
+
+//Accessible to other files 
+uint8_t rmsFlag=0;
+uint8_t ctrlFlag=0;
+double ma=0;
+ACPower_t Sbus;
+ACPower_t Sgrid;
+int dcMeas=0;
+
+uint32_t status=0;
 uint16_t DataSize=ARRAY_SIZE * sizeof(AdcData_t);
 AdcData_t adcRawInput[ARRAY_SIZE ];
-AdcData_t shifted_adc;
-
-extern SPLL_1ph_SOGI VSync;
 uint16_t adc_input_index = 0;
+char str[80];
+extern SPLL_1ph_SOGI VSync;
+extern double Vref;
 extern int inputValue;
-extern uint16_t dcValue;
-uint8_t rmsFlag=0;
-
-extern double sFactor; //ma
-//static AdcData_t max;
-//static AdcData_t min;
-//static AdcData_t rms;
-
-//RMS values
-int Vref=10000;
-int Vctrl=0;
-int dcMeas=0;
-int Vdc=0;
-uint32_t rmsError[2];
-float Ki,Kp=0;
-static int sum_squares=0; //accumulator of the instant samples 
-double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
-double ma=0;
-int dc_offset=1887;
-ACPower_t Sgrid;
-int Vmin=0;
-int Vmax=0;
-
-int sqrt(int input)  // OR isqrt16 ( uint16 n ) OR  isqrt8 ( uint8 n ) - respectively [ OR overloaded as isqrt (uint?? n) in C++ ]  
+double Vrms=0;
+double Irms=0;
+double Qmeas=0;
+double Pmeas=0;
+int sqrtInt(int input)  // OR isqrt16 ( uint16 n ) OR  isqrt8 ( uint8 n ) - respectively [ OR overloaded as isqrt (uint?? n) in C++ ]  
 {  
     register uint32_t // OR register uint16 OR register uint8 - respectively  
     root, remainder, place;  
@@ -106,10 +98,6 @@ int sqrt(int input)  // OR isqrt16 ( uint16 n ) OR  isqrt8 ( uint8 n ) - respect
     }  
     return root;  
 } 
-int tempMax=0;
-uint32_t status=0;
-int avg_sum_V =0;
-int avg_V=0;
 void ADCTask(void)//void *pvParameters
 {
 	//Get the rms values of Igrid and Vgrid
@@ -117,108 +105,58 @@ void ADCTask(void)//void *pvParameters
 	//Run control loop for volt and var
 	//if anti-islanding time, switch strategies and same for bat discharge
 	
-					
-//					load_v_rms = undo_signal_conditioning_load_vrms(result_load_vrms);
-//			 		load_i_rms = undo_signal_conditioning_load_irms(result_load_irms);
-//					dist_v_rms = undo_signal_conditioning_dist_vrms(result_dist_vrms);
-//					dist_i_rms = undo_signal_conditioning_dist_irms(result_dist_irms);
-					
-					//UARTprintf("Volt: %d\n", undo_signal_conditioning_load_vrms(23));
-					//UARTprintf("Curr: %d\n", result_dist_irms);
-					//load_v_rms = result_load_vrms;
-					//load_i_rms = result_load_irms;	
-					//dist_i_rms
-					/*
-					UARTprintf("Volt: %d\n", result_dist_vrms);
-					UARTprintf("Curr: %d\n", result_dist_irms);
-					UARTprintf("Volt: %d\n", result_dist_vrms);
-					UARTprintf("Curr: %d\n", result_dist_irms);	
-						*/				
-	
-//UARTprintf("AVG: %d\n",scb_mean_load_vrms);*/
  		if(rmsFlag==1){// Polish RMS value 
 					//Divide by N
-    Sgrid.V.sum /= ARRAY_SIZE;
-		Sgrid.I.sum /= ARRAY_SIZE;
-		Sgrid.P.sum /= ARRAY_SIZE;	
+    Sbus.V.sum /= ARRAY_SIZE;
+		Sbus.I.sum /= ARRAY_SIZE;
+		Sbus.P.sum /= ARRAY_SIZE;	
+	//	Sctrl.I.sum /= ARRAY_SIZE;
+		//Sctrl.P.sum /= ARRAY_SIZE;	
 			//Sqrt the thing
-		Sgrid.V.sum = sqrt(Sgrid.V.sum);
-		Sgrid.I.sum = sqrt(Sgrid.I.sum);
+		Sbus.V.sum = sqrtInt(Sbus.V.sum);
+		Sbus.I.sum = sqrtInt(Sbus.I.sum);
+
+//		Sctrl.I.sum = sqrt(Sctrl.I.sum);
 					
 			//Undo the scaling from adc
-		Sgrid.V.rms = ((Sgrid.V.sum) * 3300) / 4095;
-		Sgrid.I.rms = ((Sgrid.I.sum) * (6600)) / 4095; //(2* (Vrefp - Vrefn)) / 4095
-		Sgrid.P.rms = ((Sgrid.P.sum) );
-		Sgrid.V.rms = Sgrid.V.rms;	// (for upper numbers)
+		Sbus.V.rms = ((Sbus.V.sum) * 3300) / 4095;
+		Sbus.I.rms = ((Sbus.I.sum) * (6600)) / 4095; //(2* (Vrefp - Vrefn)) / 4095
+			
+	//	Sctrl.I.rms = ((Sctrl.I.sum) * (6600)) / 4095; //(2* (Vrefp - Vrefn)) / 4095
+
+
 		
 		//Undo the scaling from the signal conditioning board
-		Sgrid.V.rms=Sgrid.V.rms*14.36; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform
-		Sgrid.I.rms=Sgrid.I.rms*7.45;
-		Sgrid.P.rms=Sgrid.P.rms*107;
-	//		Sgrid.P.rms=Sgrid.I.rms*Sgrid.V.rms;
-		UARTprintf("Current Measurement: %d \n",Sgrid.I.rms); 		
-	UARTprintf("Voltage Measurement: %d \n",Sgrid.V.rms);
-	UARTprintf("Power Measurement: %d \n",Sgrid.P.rms); 		
-//	tempMax=tempMax* (6600) / 4095;
-//	UARTprintf("PE3 Max %d \n",  tempMax );	
-			//dc_offset=(Vmin+Vmax)/2;
-		//	 Vmin=100;
-// Vmax=0;
-		rmsFlag=0;
-						status ^=GPIO_PIN_3;
+		Sbus.V.rms=Sbus.V.rms*14.36; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform
+		Sbus.I.rms=Sbus.I.rms*7.45;	
+		Sbus.P.rms=((double)(Sbus.P.sum))*14.36*7.45;
+		Sbus.P.rms = 		Sbus.P.rms/1000000;
+		
+		Vrms=Sbus.V.rms/1000;
+		Irms=Sbus.I.rms/1000;
+		Sbus.S = Vrms*Irms; //can't keep it in ints cause it overflows
+		Sbus.Q=sqrt((Sbus.S *Sbus.S)-(Sbus.P.rms*Sbus.P.rms));
+	//	UARTprintf("Current Measurement: %d \n",Sbus.I.rms); 
+//sprintf (str, "%f\n", Sbus.V.rms);
+	//UARTprintf("Vbus: %s \n",str);
+//	UARTprintf("Vbus: %d  \n",Sbus.V.rms);
+//	UARTprintf("Power Measurement: %d \n",Sbus.P.rms); 
+
+
+
+	rmsFlag=0;
+	Irms= 12;
+	Qmeas=Sbus.Q;
+	Pmeas=Sbus.P.rms;
+		if((Vrms<(Vref*0.95) || Vrms>(Vref*1.05))){ //deadband, +/- 0.5 pu of 10 Vrms
+			ctrlFlag=1;
+		}
+							status ^=GPIO_PIN_3;
 			GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
 	}
-//			scb_mean_load_vrms = avg_sum_load_vrms/ARRAY_SIZE;
-//			scb_mean_load_irms = avg_sum_load_irms/ARRAY_SIZE;
-//			scb_mean_dist_vrms = avg_sum_dist_vrms/ARRAY_SIZE;
-//			scb_mean_dist_irms = avg_sum_dist_irms/ARRAY_SIZE; 
-//			//UARTprintf("AVG: %d\n",scb_mean_load_vrms);
-//			 
 
-//	//------------Updating Values------------
-//          sum_load_vrms /= ARRAY_SIZE;
-//					sum_load_irms /= ARRAY_SIZE;
-//					sum_dist_vrms /= ARRAY_SIZE;
-//					sum_dist_irms /= ARRAY_SIZE;
-//					
-//          sum_load_vrms = sqrt(sum_load_vrms);
-//					sum_load_irms = sqrt(sum_load_irms);
-//					sum_dist_vrms = sqrt(sum_dist_vrms); 
-//					sum_dist_irms = sqrt(sum_dist_irms);
-//					
-//					result_load_vrms = ((sum_load_vrms) * 3300) / 4095;
-//					result_load_irms = ((sum_load_irms) * 3300) / 4095;
-//					result_dist_vrms = ((sum_dist_vrms) * 3300) / 4095;
-//					result_dist_irms = ((sum_dist_irms) * 3300) / 4095;
-//					//undo_sig_board
-//					result_load_vrms=result_load_vrms; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform: *2.1875
-//			rmsFlag=0;
-//			// UARTprintf("PE1 %d \n",  result_load_vrms); //use 1.14 
-//		//	UARTprintf("PE4 %d \n",  shifted_adc.PE4);
-//		  //shifted_adc.PE3=  (shifted_adc.PE3*1650*2)/4095;
-//	//		sum_load_vrms=shifted_adc.PE3-2048;
-//	//		sum_load_vrms=(sum_load_vrms*3300)/4095;
-////	tempMax/= ARRAY_SIZE;
-//		//	UARTprintf("PE3 %d \n",  shifted_adc.PE3 );
-	//UARTprintf("PE3 Max %d \n",  tempMax );
-	//				tempMax=0;
-//					avg_sum_load_vrms = 0;
-//					avg_sum_load_irms = 0;
-//					avg_sum_dist_vrms = 0;
-//					avg_sum_dist_irms = 0;
-//			//-------Update the DC Values-----------
-//		Vdc=(dcMeas * 3300) / 4095;
-//		Vdc=Vdc*6.02; //multiply by 8.5247 for the voltage divider and then divide by 1.414 
-//		UARTprintf("DC Voltage %d \n", Vdc);
-//		//Volt Control 
-//		rmsError[0]=Vref - result_load_vrms;
-//		Vctrl=(rmsError[1]*Ki+rmsError[0]*Kp)+Vref;
-//		ma=((double)Vctrl)/ ((double) Vdc);
 
-//		//UARTprintf("Current corrected ma %d \n", sFactor);
-//		rmsError[1]=rmsError[0];
-//}
-		
+
 	
 	
 		
@@ -276,12 +214,12 @@ uint32_t ADCTaskInit(void(*pTask)(AdcData_t pDataStruct))
 		ADCSequenceStepConfigure(ADC0_BASE, ADC_SEQUENCE2, 2, ADC_CTL_CH8 |  ADC_CTL_END | ADC_CTL_IE  ); // PE4
 		ADCSequenceEnable(ADC0_BASE, ADC_SEQUENCE2); //adc_base, sequence
 	
-//	//DC Voltage Sequencer 
-//		ADCSequenceDisable(ADC0_BASE, ADC_SEQUENCE0); 
-//    ADCSequenceConfigure(ADC0_BASE, ADC_SEQUENCE0, ADC_TRIGGER_TIMER, 0);
-//		ADCSoftwareOversampleConfigure(ADC0_BASE, ADC_SEQUENCE0, 4);
-//		ADCSequenceStepConfigure(ADC0_BASE, ADC_SEQUENCE0, 0, ADC_CTL_CH3 |  ADC_CTL_END | ADC_CTL_IE ); //PE0, Vdc, single-ended
-//		ADCSequenceEnable(ADC0_BASE, ADC_SEQUENCE0); //adc_base, sequence 
+	//DC Voltage Sequencer 
+		ADCSequenceDisable(ADC0_BASE, ADC_SEQUENCE0); 
+    ADCSequenceConfigure(ADC0_BASE, ADC_SEQUENCE0, ADC_TRIGGER_TIMER, 0);
+		ADCSoftwareOversampleConfigure(ADC0_BASE, ADC_SEQUENCE0, 4);
+		ADCSequenceStepConfigure(ADC0_BASE, ADC_SEQUENCE0, 0, ADC_CTL_CH3 |  ADC_CTL_END | ADC_CTL_IE ); //PE0, Vdc, single-ended
+		ADCSequenceEnable(ADC0_BASE, ADC_SEQUENCE0); //adc_base, sequence 
 
  
 		//	ADCHardwareOversampleConfigure(ADC0_BASE, 8);
@@ -294,11 +232,11 @@ uint32_t ADCTaskInit(void(*pTask)(AdcData_t pDataStruct))
     ADCIntClear(ADC0_BASE, ADC_SEQUENCE2);
 		
 		//Interrupt Setup
-		ADCIntEnable(ADC0_BASE, ADC_SEQUENCE2);
-    ADCIntRegister(ADC0_BASE, ADC_SEQUENCE2, &ADC0Seq2_Handler);
-    IntPrioritySet(INT_ADC0SS2, ADC_SEQUENCE2_PRIORITY);
+		ADCIntEnable(ADC0_BASE, ADC_SEQUENCE0);
+    ADCIntRegister(ADC0_BASE, ADC_SEQUENCE0, &ADC0Seq0_Handler);
+    IntPrioritySet(INT_ADC0SS2, ADC_SEQUENCE0);
 		IntDisable(INT_ADC0SS2);
-    ADCIntClear(ADC0_BASE, ADC_SEQUENCE2);
+    ADCIntClear(ADC0_BASE, ADC_SEQUENCE0);
 		
 		//Two options: 1) use hardware averaging meaning you set up ADC1 base, set up alternate interrupt, but interrupts at a lesser frequency
 		//2) Add Sequence0 for a deeper fifo and just use software averaging on sequence 0
@@ -306,24 +244,8 @@ uint32_t ADCTaskInit(void(*pTask)(AdcData_t pDataStruct))
 		//Set up the ADC1 for DC voltages to enable hardware sampling? 
 }
 
-void clearAdcData (AdcData_t *data) {
-	data->PE0 = 0;
-	data->PE1 = 0;
-	data->PE4 = 0;
-	data->PE3 = 0;
-}
-void setAdcData (AdcData_t *data) {
-	data->PE0 = 4095;
-	data->PE1 = 4095;
-	data->PE4 = 4095;
-	data->PE3 = 4095;
-}
-float correctedInput=0;
-float testing=0;
+//float correctedInput=0;
 
-extern SPLL_1ph_SOGI VSync;
-	double fwave[100 ];
-uint16_t w_index = 0;
 void ADC0Seq2_Handler(void)
 {
   ADCIntClear(ADC0_BASE, ADC_SEQUENCE2); // Clear the timer interrupt flag.
@@ -335,50 +257,20 @@ void ADC0Seq2_Handler(void)
 
 
 	//Grabbing AC Values
-	//Sgrid.V_avg_sum += adcRawInput[adc_input_index].PE0;
-	Sgrid.V.inst = adcRawInput[adc_input_index].PE1-2048; //1650 in hex form
-	Sgrid.V.sum += Sgrid.V.inst * Sgrid.V.inst;
+	//Sbus.V_avg_sum += adcRawInput[adc_input_index].PE0;
 	
-//	avg_sum_V+= Sgrid.V.inst;
-//		if(Sgrid.V.inst<0){
-//		tempMax=Sgrid.V.inst;
-//	}
-	Sgrid.I.inst= adcRawInput[adc_input_index].PE3-2048; //2028;
-	Sgrid.I.sum += Sgrid.I.inst * Sgrid.I.inst;
-//	if(Sgrid.I.inst>tempMax){
-//		tempMax=Sgrid.I.inst;
-//	}
-	Sgrid.P.inst =(((Sgrid.I.inst* 6600) / 4095) * ((Sgrid.V.inst* 3300) / 4095));
-	Sgrid.P.sum =Sgrid.P.sum +Sgrid.P.inst;
+	Sbus.V.inst = adcRawInput[adc_input_index].PE1-2048; //1650 in hex form
+	Sbus.V.sum += Sbus.V.inst * Sbus.V.inst;
+	//Sctrl.V.sum =0;
+	
+	Sbus.I.inst= adcRawInput[adc_input_index].PE3-2048; //2028;
+	Sbus.I.sum += Sbus.I.inst * Sbus.I.inst;
 
-	
-//	//shifted_adc.PE1 = adcRawInput[adc_input_index].PE1;
-//	shifted_adc.PE4 = adcRawInput[adc_input_index].PE4;
-//	shifted_adc.PE3 = adcRawInput[adc_input_index].PE3;
-//	//	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE2, &adcRawInput[adc_input_index].PE3); //dc value
-////	dcMeas=adcRawInput[adc_input_index].PE0;
-////	avg_sum_load_vrms += adcRawInput[adc_input_index].PE1;
-//	shifted_adc.PE1 = adcRawInput[adc_input_index].PE1;//-1600; //-1600; // - 1680;//problem with subtracting the 1600 is that if voltage is 0, it gives it an rms
-//	sum_load_vrms += shifted_adc.PE1 * shifted_adc.PE1;
-//		shifted_adc.PE3 = adcRawInput[adc_input_index].PE3-2028; //-1600; // - 1680;//problem with subtracting the 1600 is that if voltage is 0, it gives it an rms
-//		shifted_adc.PE3=(shifted_adc.PE3*6600)/4095;
-//	if(shifted_adc.PE3>tempMax){
-//		tempMax=shifted_adc.PE3;
-//	}
-//	
-//	sum_load_irms += shifted_adc.PE3 * shifted_adc.PE3;
-//	tempMax=shifted_adc.PE3+tempMax;
-//	shifted_adc.PE3=(shifted_adc.PE3*3300)/4095;	
-	
-//	
-//		
-////	shifted_adc.PE4 = adcRawInput[adc_input_index].PE4;//-1600; //-1600; // - 1680;//problem with subtracting the 1600 is that if voltage is 0, it gives it an rms
-//	sum_load_irms += shifted_adc.PE4 * shifted_adc.PE4;
-//	//7.49 
-//	/*If the array is full, subtract oldest value */
-//	 
-//	//fwave[w_index]=VSync.AC_input;
-	correctedInput=(adcRawInput[adc_input_index].PE1*3300)/4095;
+	Sbus.P.inst =(((Sbus.I.inst* 6600) / 4095) * ((Sbus.V.inst* 3300) / 4095));
+	Sbus.P.sum =Sbus.P.sum +Sbus.P.inst;
+
+	//Vgrid
+	float correctedInput=(adcRawInput[adc_input_index].PE1*3300)/4095;
 	correctedInput=correctedInput/3300;
 	VSync.AC_input =(((float) correctedInput)-0.5)*2;
 	//correctedInput=(correctedInput* 3300);
@@ -403,7 +295,7 @@ void ADC0Seq0_Handler(void)
   ADCIntClear(ADC0_BASE, ADC_SEQUENCE0); // Clear the timer interrupt flag.
 	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, GPIO_PIN_6);
 	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE0, &adcRawInput[adc_input_index].PE0); //dc bus
-	dcMeas=adcRawInput[adc_input_index].PE0;
+		dcMeas=adcRawInput[adc_input_index].PE0;
 //		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0x00);
 
 }

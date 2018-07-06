@@ -117,7 +117,7 @@ void configureTimer1A(void){
 // Initializes the PWM task to output a PWM to PB6 and it's complement to PB7.
 //
 //*****************************************************************************
-uint32_t PWMTaskInit(void)
+void PWMTaskInit(void)
 {
     SysCtlPWMClockSet(SYSCTL_PWMDIV_1); //set PWM clock to processor clock with multiplier of 1
 		SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0);
@@ -145,30 +145,23 @@ uint32_t PWMTaskInit(void)
 		PWMGenEnable(PWM0_BASE, PWM_GEN_0);
 
 
-		GPIOPinConfigure(GPIO_PB4_M0PWM2);
-    GPIOPinTypePWM(GPIO_PORTB_BASE, GPIO_PIN_4);
-    PWMGenConfigure(PWM0_BASE, PWM_GEN_1, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_DB_NO_SYNC);
-    PWMGenPeriodSet(PWM0_BASE, PWM_GEN_1, 4000);
-    PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, 0);
-    PWMOutputState(PWM0_BASE, PWM_OUT_2_BIT, true);
-    //PWMOutputInvert(PWM0_BASE, PWM_OUT_1_BIT, true);
-   // PWMDeadBandEnable(PWM0_BASE, PWM_GEN_1, 0xF, 0xF);
-    GPIO_PORTB_DR8R_R |=0xC0; // 8mA output
-		 PWMGenIntTrigEnable(PWM0_BASE, PWM_GEN_1, PWM_INT_CNT_ZERO);
-		PWMGenIntRegister(PWM0_BASE, PWM_GEN_1, &PWM0IntHandler);
-		IntPrioritySet(INT_PWM0_0, 0);
-	 	PWMIntEnable(PWM0_BASE, PWM_INT_GEN_1);
-		PWMGenEnable(PWM0_BASE, PWM_GEN_1);
-		//IntDisable(INT_PWM0_0);
+//		GPIOPinConfigure(GPIO_PB4_M0PWM2);
+//    GPIOPinTypePWM(GPIO_PORTB_BASE, GPIO_PIN_4);
+//    PWMGenConfigure(PWM0_BASE, PWM_GEN_1, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_DB_NO_SYNC);
+//    PWMGenPeriodSet(PWM0_BASE, PWM_GEN_1, 4000);
+//    PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, 0);
+//    PWMOutputState(PWM0_BASE, PWM_OUT_2_BIT, true);
+//    //PWMOutputInvert(PWM0_BASE, PWM_OUT_1_BIT, true);
+//   // PWMDeadBandEnable(PWM0_BASE, PWM_GEN_1, 0xF, 0xF);
+//    GPIO_PORTB_DR8R_R |=0xC0; // 8mA output
+//		 PWMGenIntTrigEnable(PWM0_BASE, PWM_GEN_1, PWM_INT_CNT_ZERO);
+//		PWMGenIntRegister(PWM0_BASE, PWM_GEN_1, &PWM0IntHandler);
+//		IntPrioritySet(INT_PWM0_0, 0);
+//	 	PWMIntEnable(PWM0_BASE, PWM_INT_GEN_1);
+//		PWMGenEnable(PWM0_BASE, PWM_GEN_1);
+//		//IntDisable(INT_PWM0_0);
 
-	//	configureTimer1A();
-	
-    /* Used for more intense signals
-    PWMIntEnable(PWM0_BASE, PWM_INT_GEN_0); 
-    IntMasterEnable();
-    PWMGenIntTrigEnable(PWM0_BASE, PWM_GEN_0, PWM_INT_CNT_LOAD);
-    IntEnable(INT_PWM0_0);
-     */
+
 
 }
 int sawtooth[33] = {1650, 1860, 2060,2270,2480,2680,2890,3090, 3300,3090,2890,2680, 2480, 2270,2060, 1860 ,1650 ,1440, 1240 ,1030 ,830 ,620, 410, 210, 0,210,410,620,830,1030,1240,1440};
@@ -213,8 +206,8 @@ void PWM0IntHandler(void)
 	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
     PWMGenIntClear(PWM0_BASE, PWM_GEN_0, PWM_INT_CNT_ZERO);
 		int inputNeg= (-1* inputValue)+3300;
-		int newValue=(inputValue);//* ma;
-		int newNegValue=inputNeg;//*ma;
+		int newValue=(inputValue)* ma;
+		int newNegValue=inputNeg*ma;
  		uint32_t pulseW=(newValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
 		uint32_t negpulseW=(newNegValue*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
 		

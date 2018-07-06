@@ -32,15 +32,9 @@
 //*****************************************************************************
 #define GPIOSTASKSTACKSIZE        128         // Stack size in words
 
-#define TIMER1A_PRIORITY 1
-#define dcDesired 7000
-#define voltageDivider 3
 
-extern AdcData_t *adcRawInput;
-extern uint16_t adc_input_index;
+
 //int inputValue=0;
-uint16_t dcValue=0;
-
 //*****************************************************************************
 //
 // This task toggles the user selected LED at a user selected frequency. User
@@ -104,19 +98,6 @@ uint32_t GPIOTaskInit(void)
 	return(1);
 	
 }
-//uint32_t clockTime=0;
-//void configureTimer1A(void){
-//  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1); // Enable Timer 1 Clock
-//	TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC); // Configure Timer Operation as Periodic
-//  TimerLoadSet(TIMER1_BASE, TIMER_A, SysCtlClockGet()/SWITCHING_FREQ); // is set to 80MHz according to main file, Reload Value = fclk/fswitch
-//	//Configuring the interrupts	
-//	TimerIntRegister(TIMER1_BASE, TIMER_A, &Timer1AIntHandler);
-//	IntPrioritySet(INT_TIMER1A, 1);
-//	TimerEnable(TIMER1_BASE, TIMER_A);	// Start Timer 1A
-//	TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-//	IntDisable(INT_TIMER1A);
-//	TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-//}
 
 //  //double sFactor=1; //ma factor, since sawtooth is set to 3.3, it's unknown if the max of the incoming modulated sine wave is at 3.3. 
 ////If the peak isn't, change the scaling factor of the sawtooth to the ratio of the maxIncomingSignal/3.3, so it's a percentage of the full. Modulate the whole sawtooth to 

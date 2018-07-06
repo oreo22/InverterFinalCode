@@ -14,7 +14,9 @@ void	EnableInterrupts(void);
 
 
 //array
-uint32_t summer_duty[24] = {1980,1960,1920,1800,1700,1100,1000,900,500,40,100,1716,1808,1879,1912,1929,1946,1912,1861,1772,1657,1532,1367,1260};
+uint32_t undervoltage[24] = {1980,1960,1920,1800,1700,1100,1000,900,500,100,40,40,40,40,40,40,100,500,1000,1100,1700,1800,1920,1980};
+	uint32_t overvoltage[24] = {1980,40,40,40,40,40,100,100,100,100,40,40,40,40,40,40,1980,1960,1920,1960,1980,1960,1980};
+//uint32_t summer_duty[24] = {1980,1960,1920,1800,1700,1100,1000,900,500,40,100,1716,1808,1879,1912,1929,1946,1912,1861,1772,1657,1532,1367,1260};
 //uint32_t summer_duty[24] = {968,901,866,919,1000,1061,1173,1275,1346,1414,1458,1521,1620,1696,1732,1750,1768,1732,1677,1581,1458,1323,1146,1031};
 //uint32_t summer_duty[24] = {1101,1039,1006,1055,1131,1187,1292,1387,1453,1517,1557,1616,1708,1779,1812,1829,1846,1812,1761,1672,1557,1432,1267,1160};
 //uint32_t summer_duty[24] = {1201,1139,1106,1155,1231,1287,1392,1487,1553,1617,1657,1716,1808,1879,1912,1929,1946,1912,1861,1772,1657,1532,1367,1260};
@@ -36,7 +38,7 @@ uint8_t flag;
 uint16_t count;
 void Timer_15s_Init(void){
 		NVIC_ST_CTRL_R = 0;                 // disable SysTick during setup
-    NVIC_ST_RELOAD_R = 10000000;      // reload value (will interupt once a second for 80Mhz clock) 0x04C4B400
+    NVIC_ST_RELOAD_R = 10000000;//2000000;      // reload value 5 seconds per duty cycle change 
     NVIC_ST_CURRENT_R = 0;            // any write to current clears it
     NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x00FFFFFF)|0x40000000; // priority 2          
 	  NVIC_ST_CTRL_R = 0x07; // enable SysTick with core clock and interrupts
@@ -47,9 +49,9 @@ void Timer_15s_Init(void){
 void SysTick_Handler(void){ //change the value of this to determine the time between changing duty cycles 
 	//count = (count+1)%8; //if i divide by 8, i get 0.5 second changes which will really test the system 
 	//count = (count+1)%240; 
-	count = (count+1)%240; 
+	count = (count+1)%120; 
 	//if (count == 7){
-	if (count == 120){// 15 secs per cycle
+	if (count == 60){// 15 secs per cycle
 		flag = 1;
 		PF3 ^= 0x08;
 	}
@@ -83,12 +85,12 @@ int main(void){
 	//PWM0B_Init(2000, 1000);
 	
 	//PB6 and PB7
-	PWM0A_Init(2000, summer_duty[0]);	//50% duty cycle, change second number to % of first
-	PWM0B_Init(2000, summer_duty[0]);
+	PWM0A_Init(2000, undervoltage[0]);	//50% duty cycle, change second number to % of first
+	PWM0B_Init(2000, undervoltage[0]);
 	
 	//PB4 and PB5
 	PWM0A2_Init(2000, 1500);	//75% duty cycle
- 	PWM0B2_Init(2000, summer_duty[0]);
+ 	PWM0B2_Init(2000, undervoltage[0]);
 	
 	//PE4 and PE5
 	//PWM0A3_Init(8000, 2000);	//25% duty cycle, change second number to % of first
@@ -117,11 +119,11 @@ int main(void){
 		if (flag){
 			flag = 0;
 			index = (index +1)%24;
-			PWM0A_Duty(summer_duty[index]);
-//			PWM0B_Duty(2000-1960);
-//			PWM0A_Duty(1500);
-//			PWM0B_Duty(1960); //2.4 V
-			PWM0B_Duty(summer_duty[index]);
+			PWM0A_Duty(undervoltage[index]);
+		//	PWM0A_Duty(2000);
+			//PWM0A_Duty(1900);
+			//PWM0B_Duty(1900); //2.4 V
+			PWM0B_Duty(undervoltage[index]);
 			//UARTprintf("%d \n", summer_duty[index] );
 		}
 		

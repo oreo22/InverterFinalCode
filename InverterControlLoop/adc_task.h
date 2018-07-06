@@ -39,7 +39,7 @@ typedef struct AdcData AdcData_t;
 struct acValue{
 	int inst;
 	int sum;
-	int rms;
+	double rms;
 	//mean
 	//avg_sum
 };
@@ -49,8 +49,8 @@ struct ACPower{
 	acValues V;
 	acValues I;
 	acValues P;
-	int Q;
-	int S;
+	double Q;
+	double S;
 	
 };
 typedef struct ACPower ACPower_t;
@@ -73,5 +73,7 @@ void ADC_Print(void);
 void ADC_PrintJSON(void); 
 uint16_t ADC_PrintFreq(void);
 void ADCTask(void);
+
+
 
 #endif // __LED_TASK_H__

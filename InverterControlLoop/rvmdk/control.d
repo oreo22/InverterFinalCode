@@ -1,0 +1,17 @@
+.\rvmdk\control.o: Control.c
+.\rvmdk\control.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\rvmdk\control.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\rvmdk\control.o: ..\inc/hw_memmap.h
+.\rvmdk\control.o: ..\inc/hw_types.h
+.\rvmdk\control.o: ..\driverlib/rom.h
+.\rvmdk\control.o: ..\utils/uartstdio.h
+.\rvmdk\control.o: C:\Keil\ARM\ARMCC\bin\..\include\stdarg.h
+.\rvmdk\control.o: adc_task.h
+.\rvmdk\control.o: priorities.h
+.\rvmdk\control.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h
+.\rvmdk\control.o: ..\driverlib\adc.h
+.\rvmdk\control.o: ..\driverlib\sysctl.h
+.\rvmdk\control.o: ..\driverlib\timer.h
+.\rvmdk\control.o: ..\driverlib\interrupt.h
+.\rvmdk\control.o: Control.h
+.\rvmdk\control.o: ..\inc\hw_ints.h

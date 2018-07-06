@@ -455,6 +455,11 @@
               <FileType>1</FileType>
               <FilePath>.\gpio_task.c</FilePath>
             </File>
+            <File>
+              <FileName>Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Control.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
