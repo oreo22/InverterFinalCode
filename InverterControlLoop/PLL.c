@@ -132,7 +132,6 @@ unsigned char	signF=1;
 float sinewave[100 ];
 uint16_t s_index = 0;
 float oldValue=-1;
-char count=0;
 void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 // Update the spll_obj->u[0] with the grid value before calling this routine
 	
@@ -220,12 +219,6 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
 		spll_obj->sin[0]= sineSign*sineTable[sinIndex];
 		
 
-
-		sinewave[s_index]=spll_obj->sin[0];
-		s_index = (s_index + 1) % (100);
-		if(s_index==99){
-			bool fun=false;
-		}
 		
 		//		new_Mag=sineSign*(sineTable[sinIndex]);
 
@@ -275,6 +268,7 @@ void PLLRun(SPLL_1ph_SOGI *spll_obj) {
     sinIndex=(int)ceil(sinTheta*(1023));
 		new_Mag=sineSign*(sineTable[sinIndex]);
 		new_Mag=(new_Mag+1)/2;
+		new_Mag=(1-new_Mag);
 		inputValue=(int)(3300*(new_Mag)); //modulate the size of the sine wave here with ma 
 		
 ////		sinewave[s_index]=sinIndex;

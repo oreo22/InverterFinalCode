@@ -206,8 +206,8 @@ void PWM0IntHandler(void)
 	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
     PWMGenIntClear(PWM0_BASE, PWM_GEN_0, PWM_INT_CNT_ZERO);
 		int inputNeg= (-1* inputValue)+3300;
-		int newValue=(inputValue)* ma;
-		int newNegValue=inputNeg*ma;
+		int newValue=(inputValue);//* ma;
+		int newNegValue=inputNeg;//*ma;
  		uint32_t pulseW=(newValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
 		uint32_t negpulseW=(newNegValue*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
 		

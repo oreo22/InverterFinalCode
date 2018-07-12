@@ -58,11 +58,12 @@ void setAdcData (AdcData_t *data);
 //Accessible to other files 
 uint8_t rmsFlag=0;
 uint8_t ctrlFlag=0;
-double ma=0;
+double ma=0.5;
 ACPower_t Sbus;
 ACPower_t Sgrid;
 int dcMeas=0;
-
+int maxValue=0;
+double scaling[11]={18.75,15.036, 15.293, 14.706, 13.573, 12.272, 10.95, 10.331, 10.466, 10.923, 11.879}; 
 uint32_t status=0;
 uint16_t DataSize=ARRAY_SIZE * sizeof(AdcData_t);
 AdcData_t adcRawInput[ARRAY_SIZE ];
@@ -75,6 +76,7 @@ double Vrms=0;
 double Irms=0;
 double Qmeas=0;
 double Pmeas=0;
+int count=0; 
 int sqrtInt(int input)  // OR isqrt16 ( uint16 n ) OR  isqrt8 ( uint8 n ) - respectively [ OR overloaded as isqrt (uint?? n) in C++ ]  
 {  
     register uint32_t // OR register uint16 OR register uint8 - respectively  
@@ -107,27 +109,33 @@ void ADCTask(void)//void *pvParameters
 	
  		if(rmsFlag==1){// Polish RMS value 
 					//Divide by N
-    Sbus.V.sum /= ARRAY_SIZE;
+    Sbus.V.rms /= ARRAY_SIZE;
 		Sbus.I.sum /= ARRAY_SIZE;
 		Sbus.P.sum /= ARRAY_SIZE;	
+		Sbus.V.mean =Sbus.V.avg_sum /ARRAY_SIZE;
+			Sbus.V.avg_sum=0;
 	//	Sctrl.I.sum /= ARRAY_SIZE;
 		//Sctrl.P.sum /= ARRAY_SIZE;	
 			//Sqrt the thing
-		Sbus.V.sum = sqrtInt(Sbus.V.sum);
+		Sbus.V.rms  = sqrtInt(Sbus.V.rms );
 		Sbus.I.sum = sqrtInt(Sbus.I.sum);
 
 //		Sctrl.I.sum = sqrt(Sctrl.I.sum);
 					
 			//Undo the scaling from adc
-		Sbus.V.rms = ((Sbus.V.sum) * 3300) / 4095;
+		Sbus.V.rms = ((Sbus.V.rms ) * 3300) / 4095;
 		Sbus.I.rms = ((Sbus.I.sum) * (6600)) / 4095; //(2* (Vrefp - Vrefn)) / 4095
 			
 	//	Sctrl.I.rms = ((Sctrl.I.sum) * (6600)) / 4095; //(2* (Vrefp - Vrefn)) / 4095
 
 
-		
+			
 		//Undo the scaling from the signal conditioning board
-		Sbus.V.rms=Sbus.V.rms*14.36; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform
+		
+		int scale_index= (Sbus.V.rms/100);
+		
+		Sbus.V.rms=Sbus.V.rms*scaling[scale_index]; //xfmr ratio is actually 4.48 and the SCB is double the input AC waveform
+		UARTprintf("Vbus: %d \n",(int)Sbus.V.rms); 
 		Sbus.I.rms=Sbus.I.rms*7.45;	
 		Sbus.P.rms=((double)(Sbus.P.sum))*14.36*7.45;
 		Sbus.P.rms = 		Sbus.P.rms/1000000;
@@ -137,9 +145,8 @@ void ADCTask(void)//void *pvParameters
 		Sbus.S = Vrms*Irms; //can't keep it in ints cause it overflows
 		Sbus.Q=sqrt((Sbus.S *Sbus.S)-(Sbus.P.rms*Sbus.P.rms));
 	//	UARTprintf("Current Measurement: %d \n",Sbus.I.rms); 
-//sprintf (str, "%f\n", Sbus.V.rms);
-	//UARTprintf("Vbus: %s \n",str);
-//	UARTprintf("Vbus: %d  \n",Sbus.V.rms);
+
+
 //	UARTprintf("Power Measurement: %d \n",Sbus.P.rms); 
 
 
@@ -148,7 +155,12 @@ void ADCTask(void)//void *pvParameters
 	Irms= 12;
 	Qmeas=Sbus.Q;
 	Pmeas=Sbus.P.rms;
-		if((Vrms<(Vref*0.95) || Vrms>(Vref*1.05))){ //deadband, +/- 0.5 pu of 10 Vrms
+		//if((Vrms<(Vref*0.95) || Vrms>(Vref*1.05))){ //deadband, +/- 0.5 pu of 10 Vrms
+		//	ctrlFlag=1;
+		//}
+		
+		count++;
+		if(count==120000){
 			ctrlFlag=1;
 		}
 							status ^=GPIO_PIN_3;
@@ -259,9 +271,10 @@ void ADC0Seq2_Handler(void)
 	//Grabbing AC Values
 	//Sbus.V_avg_sum += adcRawInput[adc_input_index].PE0;
 	
-	Sbus.V.inst = adcRawInput[adc_input_index].PE1-2048; //1650 in hex form
+	Sbus.V.inst = adcRawInput[adc_input_index].PE1-Sbus.V.mean; //1650 in hex form
+	Sbus.V.avg_sum+=adcRawInput[adc_input_index].PE1;				
 	Sbus.V.sum += Sbus.V.inst * Sbus.V.inst;
-	//Sctrl.V.sum =0;
+
 	
 	Sbus.I.inst= adcRawInput[adc_input_index].PE3-2048; //2028;
 	Sbus.I.sum += Sbus.I.inst * Sbus.I.inst;
@@ -281,7 +294,17 @@ void ADC0Seq2_Handler(void)
 		adc_input_index = (adc_input_index + 1) % (ARRAY_SIZE);
 		if(adc_input_index==(ARRAY_SIZE - 1)){
 			rmsFlag=1;
+			Sbus.V.rms=Sbus.V.sum;
+			Sbus.V.sum=0;
 		}
+		
+		/*double approxRollingAverage (double avg, double new_sample) {
+
+    avg -= avg / N;
+    avg += new_sample / N;
+
+    return avg;
+}*/
 		//Calling the PLL	
 		PLLRun(&VSync);
 

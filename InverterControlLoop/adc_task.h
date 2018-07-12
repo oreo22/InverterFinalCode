@@ -40,8 +40,8 @@ struct acValue{
 	int inst;
 	int sum;
 	double rms;
-	//mean
-	//avg_sum
+	int mean;
+	int avg_sum;
 };
 typedef struct acValue acValues;
 

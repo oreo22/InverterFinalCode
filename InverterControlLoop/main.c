@@ -148,6 +148,7 @@ int main(void){
 	GPIOTaskInit() ;
 	ADCTaskInit(&Producer);
 	PWMTaskInit();
+	//ctrlInit();
 	PLLTaskInit((float)60,(double)1/(double)SAMPLING_FREQ, lpf_coeff,&VSync); //uint16_t Grid_freq, long DELTA_T, volatile SPLL_1ph_SOGI *spll_obj, volatile LPF_COEFF lpf_coeff
 	ConfigureUART();
 	//configureTimer2A();
@@ -158,7 +159,6 @@ int main(void){
 	//IntEnable(INT_TIMER0A);		
 	//	IntPendSet(INT_TIMER0A); 
 	//IntEnable(INT_TIMER1A);
-	
 
 	//IntEnable(INT_TIMER2A);
 	while(1){
