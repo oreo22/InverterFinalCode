@@ -39,7 +39,7 @@ uint8_t flag;
 uint16_t count;
 void Timer_15s_Init(void){
 		NVIC_ST_CTRL_R = 0;                 // disable SysTick during setup
-    NVIC_ST_RELOAD_R = 1000000; //5333;//10000000;      // reload value (will interupt once a second for 80Mhz clock) 0x04C4B400
+    NVIC_ST_RELOAD_R = 80000; //5333;//1000000; //5333;//10000000;      // reload value (will interupt once a second for 80Mhz clock) 0x04C4B400
     NVIC_ST_CURRENT_R = 0;            // any write to current clears it
     NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x00FFFFFF)|0x40000000; // priority 2          
 	  NVIC_ST_CTRL_R = 0x07; // enable SysTick with core clock and interrupts
@@ -49,7 +49,7 @@ void Timer_15s_Init(void){
 
 void SysTick_Handler(void){
 	//count = (count+1)%8;
-	count = (count+1)%8;
+	count = (count+1)%120;
 	//if (count == 7){
 	if (count == 119){
 		flag = 1;
@@ -116,15 +116,16 @@ int main(void){
 	
 	while(1){
 		//DelayWait10ms(1500);
-		if (flag){
+		if (flag){ 
 			flag = 0;
 			index = (index +1)%24;
-			//uint32_t inverse=1-summer_duty[index];
-			PWM0A_Duty(overvoltage[index]);
-		//	PWM0A_Duty(2000);
-	//		PWM0A_Duty(1000);
-		//	PWM0B_Duty(1000); //2.4 V
-			PWM0B_Duty(overvoltage[index]);
+			PWM0A_Duty(undervoltage[index]);
+			uint32_t inverse=1-undervoltage[index];
+			PWM0B_Duty(inverse);
+		
+		//	PWM0A_Duty(1000);
+			//PWM0B_Duty(1000); //2.4 V
+			
 			//UARTprintf("%d \n", summer_duty[index] );
 		}
 		

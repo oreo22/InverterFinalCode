@@ -36,8 +36,8 @@ double Qerror_running;
 double Qerror_inst;
 double PError[2];
 double Vref=5;
-float QKp=1.2;
-float QKi=0.3;
+float QKp=1;
+float QKi=0.8;
 float PKp=0.8;
 float PKi=0.01; 
 extern double ma;
@@ -65,7 +65,10 @@ void configureTimer2A(void){
 	TimerIntClear(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
 }
 
-void VarControl(void){ //double Vrms, double Irms, double Pmeas, double Qmeas
+
+
+	
+	void VarControl(void){ //double Vrms, double Irms, double Pmeas, double Qmeas
 	//	UARTprintf("Corrected ma %d \n", (int)(ma*1000));
 //		rmsError[1]=rmsError[0];
 	// clear the timer interrupt
@@ -73,16 +76,14 @@ void VarControl(void){ //double Vrms, double Irms, double Pmeas, double Qmeas
 //		rmsError[1]=rmsError[0];
 	
 		//double deltaVoltage=Vref-Vrms; //do a lookup table for Q, like 1V difference=
-		Sctrl.Q=((Vref-Vrms)*Vref); //0.014
-
+		Sctrl.Q=((Vref-Vrms)*Vref);///0.014;///0.0044825;
+/*
 	
 		//PI Control P Loop 
 		Sctrl.S=Vrms*Irms; //41,842.42 VA in rl so 41484424328
 		Sctrl.P.rms=(Sctrl.S*Sctrl.S)-(Sctrl.Q*Sctrl.Q);
 		Sctrl.P.rms=sqrt(Sctrl.P.rms);
-		//use a while loop to calculate until S is no longer negative, that's when the ma is correct, but if it's too much ma, you'll have to determine how to fix that++++++++++++++++++++
-		//UARTprintf("Required Q: %d \n",Sctrl.Q);
-//	UARTprintf("Sctrl.S: %d \n",(int)Sctrl.S);
+		//use a while loop to calculate until S is no longer negative, that's when the ma is correct, but if it's too much ma, you'll have to determine how to fix that
 		degreeDesired=(Sctrl.P.rms*0.014)/(Sgrid.V.rms*Vref);//should I multiply Vref back to 5000?
 		PError[0]=(Pmeas-Sctrl.P.rms);
 		//degreeDesired=degreeDesired*1000;
@@ -92,32 +93,33 @@ void VarControl(void){ //double Vrms, double Irms, double Pmeas, double Qmeas
 		if(degreeDesired>30){
 			degreeDesired=30;
 		}
-
 		
+		*/
 				//PI Control loop  for Q 
 		
 				//-------Update the DC Values-----------
-		Vdc=(dcMeas * 3600) / 4095;
-		Vdc=Vdc*8.35; //multiply by 8.5247 for the voltage divider and then divide by 1.414 
-		Vdc=Vdc/1000;
 		//Volt Control 
 		//rmsError[0]=Vref - Vrms;
-		//double ctrlV=(rmsError[1]*Ki+rmsError[0]*Kp)+Vref;
-		ctrlV=(Vref*1.414)+8; //inverter loses about 2 Vrms, so that's around 6 Vdc + 2 Vdc for safety 
-	//	UARTprintf("Vdc: %d \n",(int)(Vdc)); 
-	Qerror_inst=(Vref-Vrms);  //just adjust V accordingly until ya get it to the reference. Power control is seperate
-	ctrlV=ctrlV+QKi*Qerror_running+QKp*Qerror_inst;
-		UARTprintf("ctrlV: %d \n",(int)(ctrlV));
-		Qerror_running=Qerror_inst+Qerror_running;
+		//double ctrlV=(rmsError[1]*KirmsError[0]*Kp)Vref;
+		ctrlV=(Vrms*1.414)+3; //inverter loses about 2 Vrms, so that's around 6 Vdc  2 Vdc for safety 
+		Qerror_inst=(Sctrl.Q-Qmeas);
+		UARTprintf("Q Desired: %d \n",(int)Qmeas);
+		UARTprintf("Q needed: %d \n",(int)Qerror_inst);
+
+		ctrlV=ctrlV+QKp*Qerror_inst+QKi*Qerror_running;
+		//QError[1]=QError[0]+QError[1];
+		
 		//Changing the ma accordingly 
+		
+		Vdc=(dcMeas * 3300) / 4095;
+		Vdc=(Vdc*8.4199)/1000; //multiply by 8.5247 for the voltage divider and then divide by 1.414 
+
 		ma=((double)ctrlV)/ ((double) Vdc);
-UARTprintf("ma: %d \n",(int)(ma*1000)); 
 		if(ma>1){
 			ma=1;
 		}
 		ctrlFlag=0;
 	}
-
 void Timer2AIntHandler(void){
   TimerIntClear(TIMER2_BASE, TIMER_TIMA_TIMEOUT);   
 }
