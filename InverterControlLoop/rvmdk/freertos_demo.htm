@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\rvmdk\freertos_demo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\rvmdk\freertos_demo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Tue Jul 17 19:11:11 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Wed Jul 18 13:14:35 2018
 <BR><P>
 <H3>Maximum Stack Usage =        224 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -329,7 +329,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[2b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADCTaskInit
 </UL>
 
-<P><STRONG><a name="[25]"></a>ADCTask</STRONG> (Thumb, 1546 bytes, Stack size 40 bytes, adc_task.o(i.ADCTask))
+<P><STRONG><a name="[25]"></a>ADCTask</STRONG> (Thumb, 1502 bytes, Stack size 40 bytes, adc_task.o(i.ADCTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = ADCTask &rArr; VarControl &rArr; UARTprintf &rArr; UARTvprintf &rArr; UARTwrite
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
@@ -462,7 +462,7 @@ Global Symbols
 <LI><a href="#[22]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADCIntRegister
 </UL>
 
-<P><STRONG><a name="[21]"></a>PLLRun</STRONG> (Thumb, 2628 bytes, Stack size 56 bytes, pll.o(i.PLLRun))
+<P><STRONG><a name="[21]"></a>PLLRun</STRONG> (Thumb, 2612 bytes, Stack size 56 bytes, pll.o(i.PLLRun))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = PLLRun &rArr; __hardfp_ceil &rArr; __aeabi_drsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_drsub
@@ -645,7 +645,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UARTvprintf
 </UL>
 
-<P><STRONG><a name="[29]"></a>VarControl</STRONG> (Thumb, 784 bytes, Stack size 64 bytes, control.o(i.VarControl))
+<P><STRONG><a name="[29]"></a>VarControl</STRONG> (Thumb, 1268 bytes, Stack size 64 bytes, control.o(i.VarControl))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = VarControl &rArr; UARTprintf &rArr; UARTvprintf &rArr; UARTwrite
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_drsub

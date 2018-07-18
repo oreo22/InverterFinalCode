@@ -36,8 +36,8 @@ double Qerror_inst;
 double Perror_running;
 double Perror_inst;
 double Vref=5;
-float QKp=1;
-float QKi=0.001;
+float QKp=0.55;
+float QKi=0.005;
 float PKp=0.8;
 float PKi=0.01; 
 double ma=0.5;
@@ -85,17 +85,31 @@ double sqrtDb(double n){
 		//Calculating the reference for Q, P, and S
 		Sctrl->Q=(Vref-Vpcc->rms)*4; //b/c 12 VAR at 5.0, 13.5 VA at 5.4 V, using the slope of the Volt/Var curve 		
 		Sctrl->S=Vpcc->rms*4.1; //41,842.42 VA in rl so 41484424328
-		
-	//	Sctrl->P.rms=(Sctrl->S*Sctrl->S)-(Sctrl->Q*Sctrl->Q);
+//		Sctrl->P.rms=(Sctrl->S*Sctrl->S)-(Sctrl->Q*Sctrl->Q);
 	//	Sctrl->P.rms=sqrtDb(Sctrl->P.rms);
+		Sctrl->P.rms=Sinv->S*0.95;
+		
+		//PI Control P Loop 
+		Perror_inst=Sctrl->P.rms - Sinv->P.rms;
+		degreeDesired=Perror_inst*PKp;//+PKi*Perror_running; //Vinv=Vrms+ nQ;
+		if(degreeDesired>90){
+			degreeDesired=90;
+		}
+		if(degreeDesired<0){
+			degreeDesired=0;
+		}
+		degreeDesired+=13.5;
+	//	degreeDesired=13.5;
+		Perror_running=Perror_inst+Perror_running;
+		
+		
 		
 		//PI Control Q Loop 
 		
 		Qerror_inst=Sctrl->Q - Sinv->Q;
-//		UARTprintf("Qinv %d \n",(int) (Sinv->Q));
-	//	Sctrl->Q=Sctrl->Q+QKp*Qerror_inst;//+QKi*Qerror_running;
+		UARTprintf("Qinv %d \n",(int) (Sinv->Q*1000));
 		Sctrl->V.rms=Vpcc->rms*(1+Qerror_inst*QKp+QKi*Qerror_running); //Vinv=Vrms+ nQ;
-		Sctrl->V.rms=(Vpcc->rms*2); //Calculate the base Vinv before +/- necessary Q
+		Sctrl->V.rms=(Sctrl->V.rms*2); //Calculate the base Vinv before +/- necessary Q
 		
 		Qerror_running=Qerror_inst+Qerror_running;
 		

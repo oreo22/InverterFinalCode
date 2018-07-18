@@ -159,9 +159,10 @@ void ADCTask(void)//void *pvParameters
 		Vpcc.rms=Vpcc.rms*scaling[scale_index]; 
 		avg_Vbus-=avg_Vbus / 6;
 		avg_Vbus+=Vpcc.rms/6;
+		UARTprintf("Vbus: %d \n",(int)avg_Vbus); 
 		Vpcc.rms=((double)avg_Vbus)/1000;
-		UARTprintf("Vinv: %d \n",(int)Sinv.V.rms); 
-		UARTprintf("Vbus: %d \n",(int)Vpcc.rms); 
+//		UARTprintf("Vinv: %d \n",(int)Sinv.V.rms); 
+
 	//	UARTprintf("Pinv: %d \n",(int)Sinv.P.rms);
 		//UARTprintf("Iinv: %d \n",(int)Sinv.I.rms);
 		Sinv.P.rms/=1000000;
@@ -175,7 +176,7 @@ void ADCTask(void)//void *pvParameters
 		//	ctrlFlag=1;
 		//}
 		count++;
-		if(count>=300){ //&&(Sinv.V.rms<(4.9) || Sinv.V.rms>(5.1))
+		if(count>=200){ //&&(Sinv.V.rms<(4.9) || Sinv.V.rms>(5.1))
 			//ctrlFlag=1;
 			
 			VarControl(&Sinv, &Sctrl,&Vpcc);

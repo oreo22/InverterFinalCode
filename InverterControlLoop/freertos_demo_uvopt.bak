@@ -142,9 +142,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>97</LineNumber>
+          <LineNumber>106</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>11828</Address>
+          <Address>11980</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -158,32 +158,16 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>118</LineNumber>
+          <LineNumber>100</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>11946</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
+          <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\Control.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>176</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>.\adc_task.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
@@ -193,6 +177,21 @@
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>Sinv,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Qerror_inst</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Sctrl</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Vpcc</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -282,7 +281,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>860</TopLine>
+      <TopLine>863</TopLine>
       <CurrentLine>879</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\utils\uartstdio.c</PathWithFileName>
@@ -312,10 +311,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>26</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>198</TopLine>
-      <CurrentLine>161</CurrentLine>
+      <TopLine>162</TopLine>
+      <CurrentLine>171</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\adc_task.c</PathWithFileName>
       <FilenameWithoutPath>adc_task.c</FilenameWithoutPath>
@@ -330,7 +329,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>175</TopLine>
+      <TopLine>176</TopLine>
       <CurrentLine>191</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\PLL.c</PathWithFileName>
@@ -362,7 +361,7 @@
       <Focus>0</Focus>
       <ColumnNumber>17</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>80</TopLine>
+      <TopLine>81</TopLine>
       <CurrentLine>89</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\pwm_task.c</PathWithFileName>
@@ -408,10 +407,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>8</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>100</TopLine>
-      <CurrentLine>117</CurrentLine>
+      <TopLine>88</TopLine>
+      <CurrentLine>100</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Control.c</PathWithFileName>
       <FilenameWithoutPath>Control.c</FilenameWithoutPath>

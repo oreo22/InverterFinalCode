@@ -144,7 +144,7 @@
           <Type>0</Type>
           <LineNumber>106</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>11980</Address>
+          <Address>12028</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -160,13 +160,13 @@
           <Type>0</Type>
           <LineNumber>100</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>11946</Address>
+          <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
+          <BreakIfRCount>0</BreakIfRCount>
           <Filename>.\Control.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
@@ -281,7 +281,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>863</TopLine>
+      <TopLine>864</TopLine>
       <CurrentLine>879</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\utils\uartstdio.c</PathWithFileName>
@@ -313,7 +313,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>162</TopLine>
+      <TopLine>163</TopLine>
       <CurrentLine>171</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\adc_task.c</PathWithFileName>
@@ -329,7 +329,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>176</TopLine>
+      <TopLine>177</TopLine>
       <CurrentLine>191</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\PLL.c</PathWithFileName>
@@ -361,7 +361,7 @@
       <Focus>0</Focus>
       <ColumnNumber>17</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>81</TopLine>
+      <TopLine>82</TopLine>
       <CurrentLine>89</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\pwm_task.c</PathWithFileName>
@@ -407,10 +407,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>35</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>88</TopLine>
-      <CurrentLine>100</CurrentLine>
+      <TopLine>89</TopLine>
+      <CurrentLine>104</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Control.c</PathWithFileName>
       <FilenameWithoutPath>Control.c</FilenameWithoutPath>
