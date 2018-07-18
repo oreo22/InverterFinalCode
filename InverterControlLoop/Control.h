@@ -1,4 +1,4 @@
-
+#include "adc_task.h"
 struct PIArray{
 	double inst_err;
 //	double run_err;
@@ -8,7 +8,7 @@ struct PIArray{
 typedef struct PIArray PIArr;
 
 
-void VarControl(void);
+void VarControl(ACPower_t *Sbus, ACPower_t *Sctrl,acValues *Vpcc);
 void ctrlInit(void);
 void Timer2AIntHandler(void);
 void configureTimer2A(void);

@@ -26,13 +26,13 @@
 #define __ADC_TASK_H__
 
 #define SAMPLING_FREQ 6000
-#define ARRAY_SIZE 100 //window of the array
+#define ARRAY_SIZE 200 //window of the array
 
 struct AdcData{
 	uint32_t PE0;
 	uint32_t PE1;
 	uint32_t PE3;
-	uint32_t PE4;
+	uint32_t PD3;
 };
 typedef struct AdcData AdcData_t;
 

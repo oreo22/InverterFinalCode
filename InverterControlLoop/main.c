@@ -41,46 +41,7 @@
 #include "PLL.h"
 
 
-//*****************************************************************************
-//
-//! \addtogroup example_list
-//! <h1>FreeRTOS Example (freertos_demo)</h1>
-//!
-//! This application demonstrates the use of FreeRTOS on Launchpad.
-//!
-//! The application blinks the user-selected LED at a user-selected frequency.
-//! To select the LED press the left button and to select the frequency press
-//! the right button.  The UART outputs the application status at 115,200 baud,
-//! 8-n-1 mode.
-//!
-//! This application utilizes FreeRTOS to perform the tasks in a concurrent
-//! fashion.  The following tasks are created:
-//!
-//! - An LED task, which blinks the user-selected on-board LED at a
-//!   user-selected rate (changed via the buttons).
-//!
-//! - A Switch task, which monitors the buttons pressed and passes the
-//!   information to LED task.
-//!
-//! In addition to the tasks, this application also uses the following FreeRTOS
-//! resources:
-//!
-//! - A Queue to enable information transfer between tasks.
-//!
-//! - A Semaphore to guard the resource, UART, from access by multiple tasks at
-//!   the same time.
-//!
-//! - A non-blocking FreeRTOS Delay to put the tasks in blocked state when they
-//!   have nothing to do.
-//!
-//! For additional details on FreeRTOS, refer to the FreeRTOS web page at:
-//! http://www.freertos.org/
-//
-//*****************************************************************************
-
-
-
-
+#define INPUTLENGTH           20 //includes null
 //*****************************************************************************
 //
 // The error routine that is called if the driver library encounters an error.
@@ -142,6 +103,9 @@ extern int inputValue;
 volatile LPF_COEFF lpf_coeff;
 extern SPLL_1ph_SOGI VSync;
 extern uint8_t ctrlFlag;
+extern double degreeDesired;
+
+
 int main(void){
 	//use static globsls
 	ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5| SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_25MHZ);  // Set the clocking to run at 80 MHz from the PLL.
@@ -163,7 +127,9 @@ int main(void){
 	//IntEnable(INT_TIMER2A);
 	while(1){
 		ADCTask();
-	if(ctrlFlag==1){VarControl();}
+	//	degreeDesired=uartInput[0]+13.5;
+		
+	//if(ctrlFlag==1){VarControl();}
 		
 		
 	//	GPIOTask();
