@@ -57,7 +57,7 @@
 //*****************************************************************************
 #define PWMTASKSTACKSIZE        128         // Stack size in words
 #define TIMER1_PRIORITY 2
-#define SWITCHING_FREQ  6000 //10000
+#define SWITCHING_FREQ  9600 //10000
 
 //*****************************************************************************
 //
@@ -208,8 +208,7 @@ void PWM0IntHandler(void)
     PWMGenIntClear(PWM0_BASE, PWM_GEN_0, PWM_INT_CNT_ZERO);
 		int inputNeg= (-1* inputValue)+3300;
 		int newValue=(inputValue)* ma_avg;
-		int newNegValue=inputNeg*ma_avg;
- 		uint32_t pulseW=(newValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	
+		int newNegValue=inputNeg*ma_avg; 		uint32_t pulseW=(newValue*7997)/3300; //control ma by alternating the magnitude of the inputValue 	 7997
 		uint32_t negpulseW=(newNegValue*7997)/3300; //can't go up to 7998 for some reason?! creates a notch
 		
 		PWMPulseWidthSet(PWM0_BASE, PWM_OUT_0,pulseW); //PB6

@@ -61,15 +61,17 @@ uint8_t ctrlFlag=0;
 ACPower_t Sinv;
 ACPower_t Sgrid;
 int dcMeas=0;
+uint32_t avg_dcMeas=0;
+
 int maxValue=0;
 int avg_Vbus=0;
 acValues Vpcc;
-
-double scaling[11]={14.583,15.04540, 14.710, 14.589 , 13.2135, 11.716,10.6798, 10.331, 10.466, 10.923, 11.879}; 
+acValues Vbat;
+//double scaling[11]={12.583,13.04540, 12.860, 12.589 , 12.9, 10.06,10.6798, 10.331, 10.466, 10.923, 11.879}; 
+double scaling[11]={14.583,15.04540, 14.860, 14.589 , 13.9, 11.06,10.6798, 10.331, 10.466, 10.923, 11.879}; 
 uint32_t status=0;
 //uint16_t DataSize=ARRAY_SIZE * sizeof(AdcData_t);
 AdcData_t adcRawInput[ARRAY_SIZE ];
-AdcData_t VdcRawInput[10];
 uint16_t adc_input_index = 0;
 uint16_t dcIndex = 0;
 extern SPLL_1ph_SOGI VSync;
@@ -152,11 +154,14 @@ void ADCTask(void)//void *pvParameters
 		Sinv.P.rms=Sinv.P.sum;
 		Sinv.P.rms=((double)(Sinv.P.rms))*14.642*9.122;
 		
-		int scale_index=(Vpcc.rms/100);
+		int scale_index=((Vpcc.rms)/100);
 		if(scale_index>10){
 			scale_index=10;
 		}
 		Vpcc.rms=Vpcc.rms*scaling[scale_index]; 
+//		if(Vpcc.rms>5400){
+//		Vpcc.rms=Vpcc.rms-200;
+//		}
 		avg_Vbus-=avg_Vbus / 6;
 		avg_Vbus+=Vpcc.rms/6;
 		UARTprintf("Vbus: %d \n",(int)avg_Vbus); 
@@ -176,10 +181,11 @@ void ADCTask(void)//void *pvParameters
 		//	ctrlFlag=1;
 		//}
 		count++;
-		if(count>=200){ //&&(Sinv.V.rms<(4.9) || Sinv.V.rms>(5.1))
-			//ctrlFlag=1;
+		if(count>=200 ){ //&&(Sinv.V.rms<(4.9) || Sinv.V.rms>(5.1))
+			if((Vpcc.rms<(4.9) || Vpcc.rms>(5.1))){
+				VarControl(&Sinv, &Sctrl,&Vpcc);
+			}
 			
-			VarControl(&Sinv, &Sctrl,&Vpcc);
 		}
 							status ^=GPIO_PIN_3;
 			GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, status);
@@ -248,7 +254,7 @@ uint32_t ADCTaskInit(void(*pTask)(AdcData_t pDataStruct))
 		ADCSequenceDisable(ADC0_BASE, ADC_SEQUENCE0); 
     ADCSequenceConfigure(ADC0_BASE, ADC_SEQUENCE0, ADC_TRIGGER_TIMER, 0);
 	//	ADCSoftwareOversampleConfigure(ADC0_BASE, ADC_SEQUENCE0, 4);
-		ADCSequenceStepConfigure(ADC0_BASE, ADC_SEQUENCE0, 0, ADC_CTL_CH3 |  ADC_CTL_END | ADC_CTL_IE ); //PE0, Vdc, single-ended
+		ADCSequenceStepConfigure(ADC0_BASE, ADC_SEQUENCE0, 0, ADC_CTL_D |ADC_CTL_CH5 | ADC_CTL_END | ADC_CTL_IE ); //PB4 and PB5, Vdc, single-ended
 		ADCSequenceEnable(ADC0_BASE, ADC_SEQUENCE0); //adc_base, sequence 
 
  
@@ -330,12 +336,12 @@ void ADC0Seq2_Handler(void)
 void ADC0Seq0_Handler(void)
 {
   ADCIntClear(ADC0_BASE, ADC_SEQUENCE0); // Clear the timer interrupt flag.
-	//	GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, GPIO_PIN_6);
-	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE0, &VdcRawInput[dcIndex].PE0); //dc bus
-	dcMeas -=dcMeas / 10;
-	dcMeas+=(VdcRawInput[dcIndex].PE0)/10;
-	dcIndex = (dcIndex + 1) % (10);
-//		GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_6, 0x00);
+		
+	ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE0, &avg_dcMeas); //dc bus
+	dcMeas=(avg_dcMeas-2048);
+//	avg_dcMeas -=avg_dcMeas / 10;
+//	avg_dcMeas+=(dcMeas)/10;
+
 
 }
 

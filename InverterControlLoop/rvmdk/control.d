@@ -15,3 +15,5 @@
 .\rvmdk\control.o: ..\driverlib\interrupt.h
 .\rvmdk\control.o: Control.h
 .\rvmdk\control.o: ..\inc\hw_ints.h
+.\rvmdk\control.o: gpio_task.h
+.\rvmdk\control.o: ..\driverlib\gpio.h
