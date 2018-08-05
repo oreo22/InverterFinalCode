@@ -1,0 +1,160 @@
+Dependencies for Project 'freertos_demo', Target 'freertos_demo': (DO NOT MODIFY !)
+F (.\main.c)(0x5B5B7546)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\main.o --omf_browse .\rvmdk\main.crf --depend .\rvmdk\main.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\driverlib/gpio.h)(0x5B4F878A)
+I (..\driverlib/pin_map.h)(0x5B4F878B)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\driverlib/sysctl.h)(0x5B4F878B)
+I (..\driverlib/uart.h)(0x5B4F878C)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (pwm_task.h)(0x5B4F8786)
+I (adc_task.h)(0x5B5DD5D8)
+I (gpio_task.h)(0x5B4F8786)
+I (Control.h)(0x5B5EE9DC)
+I (..\driverlib\interrupt.h)(0x5B4F878A)
+I (..\inc\hw_ints.h)(0x5B4F878D)
+I (PLL.h)(0x5B4F8785)
+I (IQmathLib.h)(0x5B4F8785)
+I (C:\Keil\ARM\ARMCC\include\limits.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C87C24)
+F (.\startup_rvmdk.S)(0x5B4F8786)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-o .\rvmdk\startup_rvmdk.o --depend .\rvmdk\startup_rvmdk.d)
+F (..\utils\uartstdio.c)(0x5B4F87F8)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\uartstdio.o --omf_browse .\rvmdk\uartstdio.crf --depend .\rvmdk\uartstdio.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (..\inc/hw_ints.h)(0x5B4F878D)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\inc/hw_uart.h)(0x5B4F878E)
+I (..\driverlib/debug.h)(0x5B4F878A)
+I (..\driverlib/interrupt.h)(0x5B4F878A)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\driverlib/rom_map.h)(0x5B4F878B)
+I (..\driverlib/sysctl.h)(0x5B4F878B)
+I (..\driverlib/uart.h)(0x5B4F878C)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+F (..\utils\ustdlib.c)(0x5B4F87F8)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\ustdlib.o --omf_browse .\rvmdk\ustdlib.crf --depend .\rvmdk\ustdlib.d)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (..\driverlib/debug.h)(0x5B4F878A)
+I (..\utils/ustdlib.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\time.h)(0x51C87C24)
+F (.\adc_task.c)(0x5B65FD42)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\adc_task.o --omf_browse .\rvmdk\adc_task.crf --depend .\rvmdk\adc_task.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (adc_task.h)(0x5B5DD5D8)
+I (priorities.h)(0x5B4F8786)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C87C24)
+I (..\driverlib\adc.h)(0x5B4F8789)
+I (..\driverlib\sysctl.h)(0x5B4F878B)
+I (..\driverlib\gpio.h)(0x5B4F878A)
+I (..\driverlib\timer.h)(0x5B4F878C)
+I (..\driverlib\interrupt.h)(0x5B4F878A)
+I (..\inc\hw_ints.h)(0x5B4F878D)
+I (gpio_task.h)(0x5B4F8786)
+I (pwm_task.h)(0x5B4F8786)
+I (PLL.h)(0x5B4F8785)
+I (IQmathLib.h)(0x5B4F8785)
+I (C:\Keil\ARM\ARMCC\include\limits.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C87C24)
+I (Control.h)(0x5B5EE9DC)
+F (.\PLL.c)(0x5B5EE8EA)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\pll.o --omf_browse .\rvmdk\pll.crf --depend .\rvmdk\pll.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (priorities.h)(0x5B4F8786)
+I (..\driverlib\sysctl.h)(0x5B4F878B)
+I (..\driverlib\interrupt.h)(0x5B4F878A)
+I (..\inc\hw_ints.h)(0x5B4F878D)
+I (PLL.h)(0x5B4F8785)
+I (IQmathLib.h)(0x5B4F8785)
+I (C:\Keil\ARM\ARMCC\include\limits.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C87C24)
+I (adc_task.h)(0x5B5DD5D8)
+I (..\driverlib\timer.h)(0x5B4F878C)
+I (..\driverlib\gpio.h)(0x5B4F878A)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C87C24)
+F (.\IQmathLib.lib)(0x5B4F8785)()
+F (.\pwm_task.c)(0x5B5B9B9A)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\pwm_task.o --omf_browse .\rvmdk\pwm_task.crf --depend .\rvmdk\pwm_task.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (pwm_task.h)(0x5B4F8786)
+I (priorities.h)(0x5B4F8786)
+I (..\third_party\FreeRTOS\Source\include\FreeRTOS.h)(0x5B4F87A6)
+I (C:\Keil\ARM\ARMCC\include\stddef.h)(0x51C87C24)
+I (.\FreeRTOSConfig.h)(0x5B4F8785)
+I (..\third_party\FreeRTOS\Source\include\projdefs.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\include\portable.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\include\deprecated_definitions.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5B4F87A7)
+I (..\third_party\FreeRTOS\Source\include\mpu_wrappers.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\include\task.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\include\list.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\include\queue.h)(0x5B4F87A6)
+I (..\third_party\FreeRTOS\Source\include\semphr.h)(0x5B4F87A6)
+I (..\driverlib\pwm.h)(0x5B4F878B)
+I (..\driverlib\sysctl.h)(0x5B4F878B)
+I (..\driverlib\gpio.h)(0x5B4F878A)
+I (..\driverlib\interrupt.h)(0x5B4F878A)
+I (..\inc\hw_ints.h)(0x5B4F878D)
+I (..\driverlib\pin_map.h)(0x5B4F878B)
+I (..\driverlib\timer.h)(0x5B4F878C)
+I (adc_task.h)(0x5B5DD5D8)
+F (.\pwm_task.h)(0x5B4F8786)()
+F (.\gpio_task.c)(0x5B4F8786)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\gpio_task.o --omf_browse .\rvmdk\gpio_task.crf --depend .\rvmdk\gpio_task.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (priorities.h)(0x5B4F8786)
+I (gpio_task.h)(0x5B4F8786)
+I (adc_task.h)(0x5B5DD5D8)
+I (..\driverlib\sysctl.h)(0x5B4F878B)
+I (..\driverlib\adc.h)(0x5B4F8789)
+I (..\driverlib\gpio.h)(0x5B4F878A)
+I (..\driverlib\timer.h)(0x5B4F878C)
+I (..\driverlib\interrupt.h)(0x5B4F878A)
+I (..\inc\hw_ints.h)(0x5B4F878D)
+F (.\Control.c)(0x5B5EF286)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I. -I.. -I..\ -I..\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\third_party\FreeRTOS -I..\third_party\FreeRTOS\Source\include -I..\third_party -I..\driverlib -I..\inc --c99 -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1 -DTM4C123GH6PM-o .\rvmdk\control.o --omf_browse .\rvmdk\control.crf --depend .\rvmdk\control.d)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (..\inc/hw_memmap.h)(0x5B4F878D)
+I (..\inc/hw_types.h)(0x5B4F878E)
+I (..\driverlib/rom.h)(0x5B4F878B)
+I (..\utils/uartstdio.h)(0x5B4F87F8)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C87C24)
+I (adc_task.h)(0x5B5DD5D8)
+I (priorities.h)(0x5B4F8786)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C87C24)
+I (..\driverlib\adc.h)(0x5B4F8789)
+I (..\driverlib\sysctl.h)(0x5B4F878B)
+I (..\driverlib\timer.h)(0x5B4F878C)
+I (..\driverlib\interrupt.h)(0x5B4F878A)
+I (Control.h)(0x5B5EE9DC)
+I (..\inc\hw_ints.h)(0x5B4F878D)
+I (gpio_task.h)(0x5B4F8786)
+I (..\driverlib\gpio.h)(0x5B4F878A)
+F (..\driverlib\rvmdk\driverlib.lib)(0x5B4F878D)()
+F (.\readme.txt)(0x5B4F8786)()

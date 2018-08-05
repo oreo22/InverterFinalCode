@@ -1,0 +1,32 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Oriana\Desktop\InverterFinalCode\InverterControlLoop_FixedPt\freertos_demo.uvproj
+Project File Date:  07/18/2018
+
+<h2>Output:</h2>
+Build target 'freertos_demo'
+compiling adc_task.c...
+adc_task.c(288): warning:  #940-D: missing return statement at end of non-void function "ADCTaskInit"
+  }
+adc_task.c(325): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        VSync.AC_input =(((float) correctedInput)-0.5)*2;
+adc_task.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=13404 RO-data=5592 RW-data=1644 ZI-data=4148  
+After Build - User command #1: fromelf --bin --output .\rvmdk\freertos_demo.bin .\rvmdk\freertos_demo.axf
+".\rvmdk\freertos_demo.axf" - 0 Error(s), 2 Warning(s).
+Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\InverterControlLoop_FixedPt\\rvmdk\\freertos_demo.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Connection failed!, error code=&d
+Error: Flash Download failed  -  Target DLL has been cancelled
+Load "C:\\Users\\Oriana\\Desktop\\InverterFinalCode\\InverterControlLoop_FixedPt\\rvmdk\\freertos_demo.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+</pre>
+</body>
+</html>

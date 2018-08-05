@@ -8,7 +8,7 @@ struct PIArray{
 typedef struct PIArray PIArr;
 
 
-void VarControl(ACPower_t *Sbus, ACPower_t *Sctrl,acValues *Vpcc);
+void VarControl(ACPower_t *Sbus, ACPower_t *Sctrl,acValues *Vpcc, acValues *Pgrid);
 void ctrlInit(void);
 void Timer2AIntHandler(void);
 void configureTimer2A(void);

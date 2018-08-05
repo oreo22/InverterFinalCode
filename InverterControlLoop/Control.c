@@ -39,7 +39,7 @@ double Qerr_run=0;
 double Qerror_inst=0;
 double Perr_run=0;
 double Perr_inst=0;
-float QKp=0.55;
+float QKp=4; //Kp=0.55 * m=6
 float QKi=1;
 float PKp=0.8;
 float PKi=0.01; 
@@ -48,7 +48,7 @@ double record[100];
 int r_idx=0;
 
 double ma=0.5;
-double ma_avg=0.4;
+extern double ma_avg;
 char uartInput[5];
 
 double Pdesired=0;
@@ -100,44 +100,46 @@ double max(double A, double B){
 	return B;
 }
 
-void VarControl(ACPower_t *Sinv, ACPower_t *Sctrl, acValues *Vpcc){ //double Vrms, double Irms, double Pmeas, double Qmeas
-float m=5.3;	
-	/*	//Sctrl.Q=((Vref-Vrms)*Vref);///0.014;///0.0044825;
-		
-		//Calculating the reference for Q, P, and S
-		
-		Qerror_inst=(Vref-Vpcc->rms);
-		Vpcc->rms; //b/c 12 VAR at 5.0, 13.5 VA at 5.4 V, using the slope of the Volt/Var curve
-				
-		
-		Ki2 = Ki*dt 
-x_integral = x_integral + Ki2*e;
-x = Kp*e + x_integral
-		
-		Sctrl->Q=Qerror_inst*QKp + QKi*Qerror_running;
-		Qerror_running=Qerror_inst+Qerror_running; */
-		
+void VarControl(ACPower_t *Sinv, ACPower_t *Sctrl, acValues *Vpcc, acValues *Pgrid){ //double Vrms, double Irms, double Pmeas, double Qmeas	
+	double Srated=113.8614;
+	double Qmax=0;
+
+	//-------------------PI Control P Loop-------------
+	
+	
+	
+	if((Vpcc->rms<(Vref*0.99) || Vpcc->rms>(Vref*1.01))){
+		{
+		Qerror_inst=(Vref- Vpcc->rms); //deltaQ;
 			//-------------------PI Control Q Loop-------------
-	
-	Qerror_inst=m*(Vref- Vpcc->rms); //deltaQ;
-	Qerr_run=Qerr_run + (QKi*Qerror_inst); //dt_2*
-	Sctrl->V.rms= Qerror_inst*QKp+ Vpcc->rms + Qerr_run + Vpcc->rms;
-//	UARTprintf("Qinv %d \n",(int) (Sinv->Q*1000));
-//	Sctrl->V.rms=Vpcc->rms*(1+Qerror_inst*QKp+
-//	QKi**dt_2); //Vinv=Vrms+ nQ;
-	//Changing the ma accordingly
-	Vdc=25; //(dcMeas* 3300) / 4095;
-	//Vdc=(Vdc*7.564 )/1000; //multiply by 8.5247 for the voltage divider and then divide by 1.414 
+		/*	if(Pgrid->rms<0){
+				Pgrid->rms=Pgrid->rms*-1;
+			}
+			Qmax=(Srated*Srated) - (Pgrid->rms*Pgrid->rms);
+			Qmax=sqrtDb(Qmax);
 
-UARTprintf("Vdc %d \n",(int) Vdc);
-	ma=((double)Sctrl->V.rms)/ ((double) Vdc);
-	ma=min(1,ma);
-	ma=max(0,ma);
-	
-	ma_avg -=ma_avg / 100;
-	ma_avg+=(ma)/100;
+			if(Qmax < (Sinv->Q + Qerror_inst)){ //if the Verror can't be supported due to limited Q, just supply the max Q difference
+				Qerror_inst=Qmax-Sinv->Q;
+			}*/
+			
+			Qerr_run=Qerr_run + (QKi*Qerror_inst); //dt_2*
+			Sctrl->V.rms= Qerror_inst*QKp+ Qerr_run + Vpcc->rms;
+		
+		
+			dcMeas=dcMeas/1000;
+			ma=((double)Sctrl->V.rms)/ ((double) dcMeas);
+			ma=min(1,ma);
+			ma=max(0,ma);
+			
+			ma_avg -=ma_avg / 10;
+			ma_avg+=(ma)/10;
 
-	UARTprintf("ma %d \n",(int) (ma_avg*1000));
+			UARTprintf("ma %d \n",(int) (ma_avg*1000));
+				degreeDesired=20;
+			ctrlFlag=0;
+		}
+	}
+
 	ctrlFlag=0;
 
 		

@@ -1,3 +1,23 @@
+
+
+syms Kp Ti
+eqn1 = sqrt(1*(2*x + y*T)/2 == 166.8776;
+eqn2 = (-2*x + y*T)/2 == -166.3224;
+sol = solve([eqn1, eqn2, eqn3], [x, y]);
+KpSol = sol.x
+KiSol = sol.y
+
+
+T=1/6000;
+syms x y
+eqn1 = (2*x + y*T)/2 == 166.8776;
+eqn2 = (-2*x + y*T)/2 == -166.3224;
+sol = solve([eqn1, eqn2, eqn3], [x, y]);
+KpSol = sol.x
+KiSol = sol.y
+
+
+
 %% Sine Table Generator
 func = 'sin(2*pi*x)';
 % Define the range over which to optimize breakpoints
@@ -55,3 +75,5 @@ x_filtered=filter(b,a,x);
 
 figure(2)
 plot(t,x,t,x_filtered);
+
+
