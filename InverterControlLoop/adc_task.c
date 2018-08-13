@@ -127,11 +127,11 @@ void ADCTask(void)//void *pvParameters
 		Vpcc.rms = ((Vpcc.rms ) * 3300) / 4095;	
 	 
 	 							//Calculating the DC
-		dcMeas=(avg_dcMeas);
-		dcMeas=(dcMeas* 3300) / 4095;
-		dcMeas=(dcMeas*7.9385 ); //multiply by 8.5247 for the voltage divider and then divide by 1.414 
-	 
-		UARTprintf("Vbus: %d \n",(int)Vpcc.rms); 
+		//dcMeas=(avg_dcMeas);
+		//dcMeas=(dcMeas* 3300) / 4095;
+		//dcMeas=(dcMeas*7.9385 ); //multiply by 8.5247 for the voltage divider and then divide by 1.414 
+	 dcMeas=24900;
+
 			
 		int scale_index=((Vpcc.rms)/100);
 		if(scale_index>11){
@@ -142,7 +142,7 @@ void ADCTask(void)//void *pvParameters
 		avg_Vbus+=Vpcc.rms/6;
 
 		Vpcc.rms=Vpcc.rms*scaling[scale_index]; 
-		UARTprintf("Vpcc rms: %d \n",(int)Vpcc.rms*1.414); 
+		UARTprintf("Vpcc rms: %d \n",(int)Vpcc.rms); 
 		
 		if(count>=10 && (Vpcc.rms*1.414)>=dcMeas){
 			ma_avg=0; //turn off control signals and let the battery charge 
@@ -155,7 +155,6 @@ void ADCTask(void)//void *pvParameters
 		if(batCharge==1 && (Vpcc.rms*1.414)<=dcMeas){
 			batCharge=0;
 		}
-		UARTprintf("Vbus: %d \n",(int)Vpcc.rms);
 		if(ctrlFlag==0 && batCharge==0){
 			ma_avg=(Vpcc.rms)/dcMeas;
 			
@@ -184,7 +183,7 @@ void ADCTask(void)//void *pvParameters
 			
 			Sinv.P.rms=Sinv.P.sum;
 			Sinv.P.rms=((double)(Sinv.P.rms))*14.642*9.122;
-			UARTprintf("Vdc %d \n",(int) (dcMeas));
+		//	UARTprintf("Vdc %d \n",(int) (dcMeas));
 			Pgrid.rms=Pgrid.sum;
 			Pgrid.rms=((double)(Pgrid.rms))*scaling[scale_index]*9.122;
 			

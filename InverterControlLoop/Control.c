@@ -39,11 +39,11 @@ double Qerr_run=0;
 double Qerror_inst=0;
 double Perr_run=0;
 double Perr_inst=0;
-float QKp=4; //Kp=0.55 * m=6
-float QKi=1;
+float QKp=3.3; //Kp=0.55 * m=6
+float QKi=0.1;
 float PKp=0.8;
 float PKi=0.01; 
-double Vref=5;
+double Vref=9.6;
 double record[100];
 int r_idx=0;
 
@@ -123,7 +123,7 @@ void VarControl(ACPower_t *Sinv, ACPower_t *Sctrl, acValues *Vpcc, acValues *Pgr
 			}*/
 			
 			Qerr_run=Qerr_run + (QKi*Qerror_inst); //dt_2*
-			Sctrl->V.rms= Qerror_inst*QKp+ Qerr_run + Vpcc->rms;
+			Sctrl->V.rms= Qerror_inst*QKp + Vpcc->rms +Qerr_run;
 		
 		
 			dcMeas=dcMeas/1000;
